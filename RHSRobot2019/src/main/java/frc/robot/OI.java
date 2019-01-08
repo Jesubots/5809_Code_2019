@@ -6,9 +6,13 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
+import edu.wpi.first.wpilibj.Joystick;
 
 //controls class
 public class OI {
+  //controller(s)
+  public static final Joystick driverStick = new Joystick(0);
+
   //buttons
 
   //methods

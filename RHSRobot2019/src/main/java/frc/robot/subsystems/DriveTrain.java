@@ -16,8 +16,16 @@ public class DriveTrain extends Subsystem {
   //inputs from the joystick and the way those inputs translate into a 
   //vector usable in driving the robot
 
+  public DriveTrain(){
+
+  }
+
   @Override
   public void initDefaultCommand() {
     //default command
+  }
+
+  public void mecanumDrive(double frontRight, double frontLeft, double backRight, double backLeft){
+
   }
 }

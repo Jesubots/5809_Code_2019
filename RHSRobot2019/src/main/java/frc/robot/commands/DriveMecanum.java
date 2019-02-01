@@ -9,7 +9,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.drive.Vector2d;
 import frc.robot.OI;
 import frc.robot.Robot;
 
@@ -26,7 +25,7 @@ import frc.robot.Robot;
 * Vectors aren't *that* necessary, but they look real nice, so I'll use them.
 \************************/
 
-public class MecanumDrive extends Command {
+public class DriveMecanum extends Command {
   private double xInput; //stick x axis
   private double yInput; //stick y axis
   private double tInput; //stick twist axis
@@ -34,13 +33,13 @@ public class MecanumDrive extends Command {
   private double fl; //front-left motor value
   private double br; //back-right motor value
   private double bl; //back-left motor value
-  private Vector2d v = new Vector2d(0.0, 0.0); //2D vector that I'll make from the x/y inputs
   private double theta;
   private double mag;
   Joystick stick = OI.driverStick; //joystick object
+  private float threshold = 0.2f;
 
-  public MecanumDrive() {
-    
+  public DriveMecanum() {
+      requires(Robot.driveTrain);
   }
 
   // Called just before this Command runs the first time
@@ -59,14 +58,39 @@ public class MecanumDrive extends Command {
     //bl -- up-left
     xInput = stick.getX();
     yInput = stick.getY();
-    tInput = stick.getTwist();
-    v = new Vector2d(xInput, yInput);
+    tInput = stick.getZ();
+    /*
+    if(Math.abs(stick.getX()) > threshold)
+      xInput = stick.getX();
+    else
+      xInput = 0.0f;
+    //System.out.println("x = " + xInput);
+    if(Math.abs(stick.getY()) > threshold)
+      yInput = stick.getY();
+    else
+      yInput = 0.0f;
+    //System.out.println("y = " + yInput);
+    if(Math.abs(stick.getZ()) > threshold)
+      tInput = stick.getZ();
+    else
+      tInput = 0.0f;
+    */
+    //System.out.println("twist = " + yInput);
     theta = Math.atan(yInput/xInput);
+    //System.out.println("angle = " + theta);
     mag = Math.sqrt((xInput*xInput) + (yInput*yInput));
     fl = Math.cos(theta - 45);
-    br = Math.cos(theta - 45);
-    fr = Math.sin(theta - 45);
+    br = -Math.cos(theta - 45);
+    fr = -Math.sin(theta - 45);
     bl = Math.sin(theta - 45);
+
+    if(Math.abs(stick.getZ()) > threshold){
+      fl = -stick.getZ();
+      br = -stick.getZ();
+      fr = -stick.getZ();
+      bl = -stick.getZ();
+    }
+    /*
     if(Math.abs(fl) == Math.sin(45)){
       fl = Math.signum(fl);
     }
@@ -79,8 +103,15 @@ public class MecanumDrive extends Command {
     if(Math.abs(br) == Math.sin(45)){
       br = Math.signum(br);
     }
+    */
+    //System.out.println("final fl = " + fl);
+    //System.out.println("final fr = " + fr);
+    //System.out.println("final bl = " + bl);
+    //%System.out.println("final br = " + br);
+    //Robot.driveTrain.mecanumDrive(fl, fr, bl, br);
 
-    Robot.driveTrain.mecanumDrive(fl, fr, bl, br);
+    System.out.println("navx yaw = " + Robot.driveTrain.ahrs.getYaw());
+    Robot.driveTrain.mecanum.driveCartesian(xInput, -yInput, -tInput, -Robot.driveTrain.ahrs.getYaw());
   }
 
   // Make this return true when this Command no longer needs to run execute()

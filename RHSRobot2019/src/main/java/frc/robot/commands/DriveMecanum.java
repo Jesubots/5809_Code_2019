@@ -36,6 +36,7 @@ public class DriveMecanum extends Command {
   private double theta;
   private double mag;
   Joystick stick = OI.driverStick; //joystick object
+  Joystick stick2 = OI.operatorStick;
   private float threshold = 0.2f;
 
   public DriveMecanum() {
@@ -56,9 +57,9 @@ public class DriveMecanum extends Command {
     //fl -- up-right
     //br -- up-right
     //bl -- up-left
-    xInput = stick.getX();
+    xInput = stick2.getX();
     yInput = stick.getY();
-    tInput = stick.getZ();
+    tInput = stick2.getZ();
     /*
     if(Math.abs(stick.getX()) > threshold)
       xInput = stick.getX();
@@ -110,8 +111,8 @@ public class DriveMecanum extends Command {
     //%System.out.println("final br = " + br);
     //Robot.driveTrain.mecanumDrive(fl, fr, bl, br);
 
-    System.out.println("navx yaw = " + Robot.driveTrain.ahrs.getYaw());
-    Robot.driveTrain.mecanum.driveCartesian(xInput, -yInput, -tInput, -Robot.driveTrain.ahrs.getYaw());
+    //System.out.println("navx yaw = " + Robot.driveTrain.ahrs.getYaw());
+    Robot.driveTrain.mecanum.driveCartesian(xInput, -yInput, -tInput); //-Robot.driveTrain.ahrs.getYaw());
   }
 
   // Make this return true when this Command no longer needs to run execute()

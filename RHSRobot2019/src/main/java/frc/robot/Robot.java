@@ -80,7 +80,6 @@ public class Robot extends TimedRobot {
   //runs when teleop initializes
   @Override
   public void teleopInit() {
-
     //stop auto
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();

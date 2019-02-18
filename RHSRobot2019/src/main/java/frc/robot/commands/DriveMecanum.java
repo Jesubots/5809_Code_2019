@@ -57,9 +57,9 @@ public class DriveMecanum extends Command {
     //fl -- up-right
     //br -- up-right
     //bl -- up-left
-    xInput = stick2.getX();
+    xInput = stick.getX();
     yInput = stick.getY();
-    tInput = stick2.getZ();
+    tInput = stick.getZ();
     /*
     if(Math.abs(stick.getX()) > threshold)
       xInput = stick.getX();
@@ -80,10 +80,10 @@ public class DriveMecanum extends Command {
     theta = Math.atan(yInput/xInput);
     //System.out.println("angle = " + theta);
     mag = Math.sqrt((xInput*xInput) + (yInput*yInput));
-    fl = Math.cos(theta - 45);
-    br = -Math.cos(theta - 45);
-    fr = -Math.sin(theta - 45);
-    bl = Math.sin(theta - 45);
+    fl = Math.cos(theta - (Math.PI / 4));
+    br = -Math.cos(theta - (Math.PI / 4));
+    fr = -Math.sin(theta - (Math.PI / 4));
+    bl = Math.sin(theta - (Math.PI / 4));
 
     if(Math.abs(stick.getZ()) > threshold){
       fl = -stick.getZ();

@@ -9,5 +9,15 @@ package frc.robot;
 
 //for universal variables (i.e. ports, sensor/actuator configs)
 public class RobotMap {
-  //public static Thing thing = data;
+
+  public class PolarPIDMap { // .028, .0025, .15, .1
+		public static final double kP = 0.023;
+		public static final double kI = 0.0026;
+		public static final double kD = 0.25;
+		public static final double kF = 0.1;
+		public static final double kToleranceDegrees = 1.0f;
+  }
+
+
+  
 }

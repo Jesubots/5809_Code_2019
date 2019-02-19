@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.PID;
 
 import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
@@ -36,15 +36,14 @@ public class PolarYPID extends PIDSubsystem {
 
   @Override
   protected double returnPIDInput() {
-    // Return your input value for the PID loop
-    // e.g. a sensor, like a potentiometer:
-    // yourPot.getAverageVoltage() / kYourMaxVoltage;
-    return 0.0;
+    int avg;
+    avg = (Robot.driveTrain.getFLEncoder() + Robot.driveTrain.getBREncoder()) / 2;
+    return avg; //returns average encoder value for front left and back right
   }
 
   @Override
   protected void usePIDOutput(double output) {
-    Robot.driveTrain.setFrontLeft(output);
-    Robot.driveTrain.setBackRight(output);
+    Robot.driveTrain.frontLeft.set(output);
+    Robot.driveTrain.backRight.set(output);
   }
 }

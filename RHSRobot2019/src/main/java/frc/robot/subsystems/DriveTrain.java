@@ -7,16 +7,18 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.command.PIDSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import frc.robot.OI;
 import frc.robot.commands.DriveMecanum;
+import frc.robot.subsystems.PID.PolarXPID;
+import frc.robot.subsystems.PID.PolarYPID;
 
 public class DriveTrain extends Subsystem {
   // thinking mecanum drive...
@@ -28,13 +30,12 @@ public class DriveTrain extends Subsystem {
   public WPI_TalonSRX backLeft = new WPI_TalonSRX(1);
   public WPI_TalonSRX backRight = new WPI_TalonSRX(2);
   public AHRS ahrs = new AHRS(Port.kMXP);
-  private double[] motorValues = new double[4];
   Joystick stick = OI.driverStick;
 
   public MecanumDrive mecanum = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
 
-  public PolarXPID encXPID;
-  public PolarYPID encYPID;
+  public PolarXPID encXPID = new PolarXPID();
+  public PolarYPID encYPID = new PolarYPID();
 
   public DriveTrain() {
     // frontRight.setNeutralMode(NeutralMode.Brake);
@@ -81,28 +82,37 @@ public class DriveTrain extends Subsystem {
     encYPID.disable();
   }
 
-  public double[] getMotorValues(){
-    return motorValues;
+  //encoder position methods
+  public int getFREncoder(){
+    frontRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    return frontRight.getSelectedSensorPosition();
   }
 
-  public void setMotorValues(double[] newMotorValues){
-    motorValues = newMotorValues;
+  public int getFLEncoder(){
+    frontLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    return frontLeft.getSelectedSensorPosition();
   }
 
-  public void setFrontLeft(double input){
-    motorValues[0] = input;
+  public int getBREncoder(){
+    backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    return backRight.getSelectedSensorPosition();
   }
 
-  public void setFrontRight(double input){
-    motorValues[1] = input;
+  public int getBLEncoder(){
+    backLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    return backLeft.getSelectedSensorPosition();
   }
 
-  public void setBackLeft(double input){
-    motorValues[2] = input;
-  }
+  //reset all encoder values to zero
+  public void resetEncoders(){
+    frontRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    frontLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    backLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-  public void setBackRight(double input){
-    motorValues[3] = input;
+    frontRight.setSelectedSensorPosition(0);
+    frontLeft.setSelectedSensorPosition(0);
+    backLeft.setSelectedSensorPosition(0);
+    backLeft.setSelectedSensorPosition(0);
   }
-
 }

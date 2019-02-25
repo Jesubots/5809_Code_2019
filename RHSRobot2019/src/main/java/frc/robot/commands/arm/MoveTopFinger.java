@@ -10,9 +10,15 @@ package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class MoveTopFinger extends Command {
+  private double input;
+
   public MoveTopFinger() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+  }
+
+  public MoveTopFinger(double input){
+    this.input = input * .25;
   }
 
   // Called just before this Command runs the first time
@@ -28,7 +34,7 @@ public class MoveTopFinger extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return input = 0;
   }
 
   // Called once after isFinished returns true

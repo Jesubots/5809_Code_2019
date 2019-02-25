@@ -11,8 +11,14 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class MoveArm extends Command {
+  private double input;
+
   public MoveArm() {
     requires(Robot.armAssembly);
+  }
+
+  public MoveArm(double input){
+    this.input = input * .25;
   }
 
   // Called just before this Command runs the first time
@@ -28,7 +34,7 @@ public class MoveArm extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return input == 0;
   }
 
   // Called once after isFinished returns true

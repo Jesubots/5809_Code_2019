@@ -71,9 +71,7 @@ public class JointToAngle extends Command {
     //all this does is turn off whichever motor is being used by the PID
     if(joint == Joint.kARM){
       Robot.armAssembly.moveJoint(Robot.armAssembly.armMaster_motor, 0);
-    } else if(joint == Joint.kLEFT_INTAKE){
-      Robot.armAssembly.moveJoint(Robot.armAssembly.leftIntakeArm_motor, 0);
-    } else if(joint == Joint.kRIGHT_INTAKE){
+    } else if(joint == Joint.kINTAKE){
       Robot.armAssembly.moveJoint(Robot.armAssembly.rightIntakeArm_motor, 0);
     } else if(joint == Joint.kTOP_FINGER){
       Robot.armAssembly.moveJoint(Robot.armAssembly.topFinger_motor, 0);

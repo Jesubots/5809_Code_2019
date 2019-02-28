@@ -38,11 +38,9 @@ public class PotPID extends PIDSubsystem {
   @Override
   protected double returnPIDInput() {
     if(joint == Joint.kARM){
-      return Robot.armAssembly.arm_pot.get();
-    } else if(joint == Joint.kLEFT_INTAKE){
-      return Robot.armAssembly.leftIntakeArm_pot.get();
-    } else if(joint == Joint.kRIGHT_INTAKE){
-      return Robot.armAssembly.rightIntakeArm_pot.get();
+      return 0; //encoder
+    } else if(joint == Joint.kINTAKE){
+      return Robot.armAssembly.intake_pot.get();
     } else if(joint == Joint.kTOP_FINGER){
       return Robot.armAssembly.topFinger_pot.get();
     } else if(joint == Joint.kBOTTOM_FINGER){
@@ -59,9 +57,7 @@ public class PotPID extends PIDSubsystem {
   protected void usePIDOutput(double output) {
     if(joint == Joint.kARM){
       Robot.armAssembly.moveJoint(Robot.armAssembly.armMaster_motor, output);
-    } else if(joint == Joint.kLEFT_INTAKE){
-      Robot.armAssembly.moveJoint(Robot.armAssembly.leftIntakeArm_motor, output);
-    } else if(joint == Joint.kRIGHT_INTAKE){
+    } else if(joint == Joint.kINTAKE){
       Robot.armAssembly.moveJoint(Robot.armAssembly.rightIntakeArm_motor, output);
     } else if(joint == Joint.kTOP_FINGER){
       Robot.armAssembly.moveJoint(Robot.armAssembly.topFinger_motor, output);

@@ -34,7 +34,7 @@ public class MoveTopFinger extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return input = 0;
+    return input == 0;
   }
 
   // Called once after isFinished returns true

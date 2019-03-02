@@ -22,27 +22,27 @@ import frc.robot.subsystems.PID.PolarXPID;
 import frc.robot.subsystems.PID.PolarYPID;
 
 public class DriveTrain extends Subsystem {
-  public WPI_TalonSRX frontRight = new WPI_TalonSRX(0);
-  public WPI_TalonSRX frontLeft = new WPI_TalonSRX(3);
-  public WPI_TalonSRX backLeft = new WPI_TalonSRX(1);
-  public WPI_TalonSRX backRight = new WPI_TalonSRX(2);
+  public WPI_TalonSRX frontRight_motor = new WPI_TalonSRX(0);
+  public WPI_TalonSRX frontLeft_motor = new WPI_TalonSRX(3);
+  public WPI_TalonSRX backLeft_motor = new WPI_TalonSRX(1);
+  public WPI_TalonSRX backRight_motor = new WPI_TalonSRX(2);
   public AHRS ahrs = new AHRS(Port.kMXP);
   Joystick stick = OI.driverStick;
 
-  public MecanumDrive mecanum = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
+  public MecanumDrive mecanum = new MecanumDrive(frontLeft_motor, backLeft_motor, frontRight_motor, backRight_motor);
 
   public PolarXPID encXPID = new PolarXPID();
   public PolarYPID encYPID = new PolarYPID();
 
   public DriveTrain() {
-    frontRight.setNeutralMode(NeutralMode.Brake);
-    frontLeft.setNeutralMode(NeutralMode.Brake);
-    backRight.setNeutralMode(NeutralMode.Brake);
-    backLeft.setNeutralMode(NeutralMode.Brake);
-    frontLeft.setSafetyEnabled(false);
-    frontRight.setSafetyEnabled(false);
-    backLeft.setSafetyEnabled(false);
-    backRight.setSafetyEnabled(false);
+    frontRight_motor.setNeutralMode(NeutralMode.Brake);
+    frontLeft_motor.setNeutralMode(NeutralMode.Brake);
+    backRight_motor.setNeutralMode(NeutralMode.Brake);
+    backLeft_motor.setNeutralMode(NeutralMode.Brake);
+    frontLeft_motor.setSafetyEnabled(false);
+    frontRight_motor.setSafetyEnabled(false);
+    backLeft_motor.setSafetyEnabled(false);
+    backRight_motor.setSafetyEnabled(false);
 
     ahrs.zeroYaw();
   }
@@ -60,17 +60,17 @@ public class DriveTrain extends Subsystem {
   }
 
   public void setBrakeMode(){
-    frontRight.setNeutralMode(NeutralMode.Brake);
-    frontLeft.setNeutralMode(NeutralMode.Brake);
-    backRight.setNeutralMode(NeutralMode.Brake);
-    backLeft.setNeutralMode(NeutralMode.Brake);
+    frontRight_motor.setNeutralMode(NeutralMode.Brake);
+    frontLeft_motor.setNeutralMode(NeutralMode.Brake);
+    backRight_motor.setNeutralMode(NeutralMode.Brake);
+    backLeft_motor.setNeutralMode(NeutralMode.Brake);
   }
 
   public void setCoastMode(){
-    frontRight.setNeutralMode(NeutralMode.Coast);
-    frontLeft.setNeutralMode(NeutralMode.Coast);
-    backRight.setNeutralMode(NeutralMode.Coast);
-    backLeft.setNeutralMode(NeutralMode.Coast);
+    frontRight_motor.setNeutralMode(NeutralMode.Coast);
+    frontLeft_motor.setNeutralMode(NeutralMode.Coast);
+    backRight_motor.setNeutralMode(NeutralMode.Coast);
+    backLeft_motor.setNeutralMode(NeutralMode.Coast);
   }
 
   public void DrivePolarXPID(double distance) {
@@ -95,35 +95,35 @@ public class DriveTrain extends Subsystem {
 
   //encoder position methods
   public int getFREncoder(){
-    frontRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    return frontRight.getSelectedSensorPosition();
+    frontRight_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    return frontRight_motor.getSelectedSensorPosition();
   }
 
   public int getFLEncoder(){
-    frontLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    return frontLeft.getSelectedSensorPosition();
+    frontLeft_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    return frontLeft_motor.getSelectedSensorPosition();
   }
 
   public int getBREncoder(){
-    backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    return backRight.getSelectedSensorPosition();
+    backRight_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    return backRight_motor.getSelectedSensorPosition();
   }
 
   public int getBLEncoder(){
-    backLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    return backLeft.getSelectedSensorPosition();
+    backLeft_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    return backLeft_motor.getSelectedSensorPosition();
   }
 
   //reset all encoder values to zero
   public void resetEncoders(){
-    frontRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    frontLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    backRight.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    backLeft.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    frontRight_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    frontLeft_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    backRight_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    backLeft_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-    frontRight.setSelectedSensorPosition(0);
-    frontLeft.setSelectedSensorPosition(0);
-    backLeft.setSelectedSensorPosition(0);
-    backLeft.setSelectedSensorPosition(0);
+    frontRight_motor.setSelectedSensorPosition(0);
+    frontLeft_motor.setSelectedSensorPosition(0);
+    backLeft_motor.setSelectedSensorPosition(0);
+    backLeft_motor.setSelectedSensorPosition(0);
   }
 }

@@ -39,7 +39,7 @@ public class PolarXPID extends PIDSubsystem {
 
   @Override
   protected void usePIDOutput(double output) {
-    Robot.driveTrain.frontRight.set(output);
-    Robot.driveTrain.backLeft.set(output);
+    Robot.driveTrain.frontRight_motor.set(output);
+    Robot.driveTrain.backLeft_motor.set(output);
   }
 }

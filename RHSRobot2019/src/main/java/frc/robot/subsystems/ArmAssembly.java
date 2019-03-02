@@ -8,15 +8,16 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.Joint;
+import frc.robot.commands.arm.MoveArm;
 import frc.robot.subsystems.PID.PotPID;
 
 /**
@@ -42,14 +43,18 @@ public class ArmAssembly extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new MoveArm());
   }
 
-  public void JointToAnglePID(double angle, Joint joint){
+  public void StartPotPID(double angle, Joint joint){
     potPID.setJoint(joint);
     potPID.setSetpoint(angle);
     potPID.enable();
+  }
+
+  public void StopPotPID(Joint joint){
+    potPID.disable();
+    cancelMotors(joint);
   }
 
   public void moveJoint(VictorSPX victor, double output){
@@ -59,10 +64,19 @@ public class ArmAssembly extends Subsystem {
   public void moveJoint(WPI_TalonSRX talon, double output){
     talon.set(output);
   }
+
+  public double getArmAngle(){
+    double angle = 0.0;
+    armMaster_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    double encRaw = armMaster_motor.getSelectedSensorPosition();
+    angle = encRaw*(360/4096);
+    angle += 30.96;
+    return angle;
+  }
   
   public double getPotAngle(Joint joint){
     if(joint == Joint.kARM){
-      return 0; //RETURN ARM ENCODER
+      return getArmAngle();
     } else if(joint == Joint.kINTAKE){
       return intake_pot.get();
     } else if(joint == Joint.kTOP_FINGER){
@@ -74,6 +88,23 @@ public class ArmAssembly extends Subsystem {
     } else {
       System.out.println("Cannot get potentiometer angle. No joint selected.");
       return 0;
+    }
+  }
+
+  private void cancelMotors(Joint joint){
+    //all this does is turn off whichever motor is being used by the PID
+    if(joint == Joint.kARM){
+      moveJoint(armMaster_motor, 0);
+    } else if(joint == Joint.kINTAKE){
+      moveJoint(rightIntakeArm_motor, 0);
+    } else if(joint == Joint.kTOP_FINGER){
+      moveJoint(topFinger_motor, 0);
+    } else if(joint == Joint.kBOTTOM_FINGER){
+      moveJoint(bottomFinger_motor, 0);
+    } else if(joint == Joint.kWRIST){
+      moveJoint(wrist_motor, 0);
+    } else {
+      System.out.println("Cannot cancel motors. No motor selected.");
     }
   }
 }

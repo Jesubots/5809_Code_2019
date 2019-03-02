@@ -38,7 +38,7 @@ public class PotPID extends PIDSubsystem {
   @Override
   protected double returnPIDInput() {
     if(joint == Joint.kARM){
-      return 0; //encoder
+      return Robot.armAssembly.getArmAngle();
     } else if(joint == Joint.kINTAKE){
       return Robot.armAssembly.intake_pot.get();
     } else if(joint == Joint.kTOP_FINGER){
@@ -55,6 +55,7 @@ public class PotPID extends PIDSubsystem {
 
   @Override
   protected void usePIDOutput(double output) {
+    output *= .5;
     if(joint == Joint.kARM){
       Robot.armAssembly.moveJoint(Robot.armAssembly.armMaster_motor, output);
     } else if(joint == Joint.kINTAKE){

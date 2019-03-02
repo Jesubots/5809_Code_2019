@@ -7,15 +7,66 @@
 
 package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.RobotMap.ArmPosition;
+import frc.robot.RobotMap.BallTarget;
+import frc.robot.RobotMap.Joint;
+import frc.robot.commands.Climb;
+import frc.robot.commands.PID.JointToAngle;
+import frc.robot.commands.arm.FlipArm;
+import frc.robot.commands.arm.routines.PickupBallGround;
+import frc.robot.commands.arm.routines.PlaceHatch;
+import frc.robot.commands.arm.routines.PositionArm;
+import frc.robot.commands.arm.routines.ShootBall;
 
 //controls class
 public class OI {
   //controller(s)
   public static final Joystick driverStick = new Joystick(0);
-  public static final Joystick operatorStick = new Joystick(1);
-
-  //buttons
-
+  public static final Joystick buttonPanel = new Joystick(1);
+  //arm
+  private static double wristAngle = 0;
+  private static int armDir = 1;
+  //buttons, denoted by _b
+  public static JoystickButton hatchGroundPickup_b = new JoystickButton(buttonPanel, 0);
+  public static JoystickButton hatchWallPickup_b = new JoystickButton(buttonPanel, 1);
+  public static JoystickButton hatchPlace_b = new JoystickButton(buttonPanel, 2);
+  public static JoystickButton ballGroundPickup_b = new JoystickButton(buttonPanel, 3);
+  public static JoystickButton shootRocketLow_b = new JoystickButton(buttonPanel, 4);
+  public static JoystickButton shootCargo_b = new JoystickButton(buttonPanel, 5);
+  public static JoystickButton shootRocketMid_b = new JoystickButton(buttonPanel, 6);
+  public static JoystickButton flipArm_b = new JoystickButton(buttonPanel, 7);
+  public static JoystickButton climb_b = new JoystickButton(driverStick, 5);
+  public static JoystickButton intakePosition_b = new JoystickButton(driverStick, 0);
   //methods
-  
+  public void initButtons(){
+    //"SW" indicates "should work", "NW" indicates "needs work"
+
+    OI.flipArm_b.whenPressed(new FlipArm());
+    OI.flipArm_b.whenPressed(new JointToAngle(Joint.kARM, Robot.armAssembly.getArmAngle() * -1, 2)); //SW
+
+    OI.ballGroundPickup_b.whenPressed(new PickupBallGround()); //NW
+
+    OI.intakePosition_b.whenPressed(new JointToAngle(Joint.kINTAKE, RobotMap.MAXIMUM_INTAKE_ANGLE, 2)); //SW
+
+    OI.hatchWallPickup_b.whenPressed(new PositionArm(ArmPosition.kHATCH)); //NW
+
+    OI.hatchPlace_b.whenPressed(new PlaceHatch()); //NW
+
+    OI.shootRocketLow_b.whenPressed(new ShootBall(BallTarget.kLOW)); //NW
+
+    OI.shootRocketMid_b.whenPressed(new ShootBall(BallTarget.kMID)); //NW
+
+    OI.shootCargo_b.whenPressed(new ShootBall(BallTarget.kCARGO)); //NW
+
+    OI.climb_b.whenPressed(new Climb()); //NW
+  }
+
+  public static int getArmDir(){
+    return armDir;
+  }
+
+  public static void setArmDir(int dir){
+    armDir = dir;
+  }
 }

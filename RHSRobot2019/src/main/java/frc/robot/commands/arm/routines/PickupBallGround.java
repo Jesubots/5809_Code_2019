@@ -8,27 +8,15 @@
 package frc.robot.commands.arm.routines;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.RobotMap.BallTarget;
+import frc.robot.RobotMap.ArmPosition;
+import frc.robot.commands.arm.IntakeBall;
 
-public class ShootBall extends CommandGroup {
+public class PickupBallGround extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public ShootBall() {
-
-  }
-
-  public ShootBall(BallTarget target){
-
-    //AIM with LIMELIGHT
-
-    //ARM POS, ADJUST DISTANCE, AND FIRE
-    if(target == BallTarget.kMID){
-
-    } else if(target == BallTarget.kLOW){
-
-    } else if(target == BallTarget.kCARGO){
-
-    }
+  public PickupBallGround() {
+    addSequential(new PositionArm(ArmPosition.kBALL_PICKUP));
+    addSequential(new IntakeBall());
   }
 }

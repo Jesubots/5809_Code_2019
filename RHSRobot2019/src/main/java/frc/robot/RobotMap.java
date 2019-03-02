@@ -9,7 +9,10 @@ package frc.robot;
 
 //for universal variables (i.e. ports, sensor/actuator configs)
 public class RobotMap {
+	//constants
 	public static final double ENCODER_CONVERSION_CONSTANT = 2144.660585;
+	public static final double ARM_WRIST_RATIO = 1f;
+	public static final double MAXIMUM_INTAKE_ANGLE = 90f;
 	//climber motors
 	public static final int leftClimber_motor_port = 0;
 	public static final int rightClimber_motor_port = 0;
@@ -66,6 +69,13 @@ public class RobotMap {
 		kHATCH,
 		kBALL_PICKUP,
 		kSHOOT_LOW,
-		kSHOOT_MID
+		kSHOOT_MID,
+		kSHOOT_CARGO
+	}
+
+	public enum BallTarget {
+		kMID,
+		kLOW,
+		kCARGO
 	}
 }

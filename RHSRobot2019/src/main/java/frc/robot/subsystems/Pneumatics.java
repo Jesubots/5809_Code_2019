@@ -17,10 +17,19 @@ import frc.robot.RobotMap;
 public class Pneumatics extends Subsystem {
   Solenoid leftPunch_sol = new Solenoid(RobotMap.leftPunch_sol_port);
   Solenoid rightPunch_sol = new Solenoid(RobotMap.rightPunch_sol_port);
+  Solenoid brake_sol = new Solenoid(RobotMap.brake_sol_port);
 
   public void punch(){
     leftPunch_sol.set(true);
     rightPunch_sol.set(true);
+  }
+
+  public void brakeOn(){
+    brake_sol.set(true);
+  }
+
+  public void brakeOff(){
+    brake_sol.set(false);
   }
 
   @Override

@@ -49,10 +49,14 @@ public class JointToAngle extends Command {
   @Override
   protected boolean isFinished() {
     //finishes if the angle is within 5 degrees or the command times out
-    if(joint != Joint.kARM)
+    if(joint != Joint.kARM && joint != Joint.kWRIST)
       return (Math.abs(angle - Robot.armAssembly.getPotAngle(joint)) < 5) || isTimedOut();
-    else 
+    else if(joint == Joint.kWRIST)
+      return (Math.abs(angle - Robot.armAssembly.getWristAngle()) < 5) || isTimedOut();
+    else if(joint == Joint.kARM)
       return (Math.abs(angle - Robot.armAssembly.getArmAngle()) < 5) || isTimedOut();
+    else
+      return isTimedOut();
   }
 
   // Called once after isFinished returns true

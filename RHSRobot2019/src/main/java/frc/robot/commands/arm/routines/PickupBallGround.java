@@ -9,6 +9,8 @@ package frc.robot.commands.arm.routines;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.RobotMap.ArmPosition;
+import frc.robot.RobotMap.Joint;
+import frc.robot.commands.PID.JointToAngle;
 import frc.robot.commands.arm.IntakeBall;
 
 public class PickupBallGround extends CommandGroup {
@@ -18,5 +20,8 @@ public class PickupBallGround extends CommandGroup {
   public PickupBallGround() {
     addSequential(new PositionArm(ArmPosition.kBALL_PICKUP));
     addSequential(new IntakeBall());
+    addSequential(new JointToAngle(Joint.kTOP_FINGER, 180, 2));
+    addParallel(new JointToAngle(Joint.kBOTTOM_FINGER, 0, 2));
+    addSequential(new PositionArm(ArmPosition.kHOLDING));
   }
 }

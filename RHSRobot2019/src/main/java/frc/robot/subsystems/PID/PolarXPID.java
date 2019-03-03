@@ -8,6 +8,7 @@
 package frc.robot.subsystems.PID;
 
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
+import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
@@ -39,7 +40,7 @@ public class PolarXPID extends PIDSubsystem {
 
   @Override
   protected void usePIDOutput(double output) {
-    Robot.driveTrain.frontRight_motor.set(output);
-    Robot.driveTrain.backLeft_motor.set(output);
+    Robot.driveTrain.frontRight_motor.set(output * OI.getArmDir());
+    Robot.driveTrain.backLeft_motor.set(output * OI.getArmDir());
   }
 }

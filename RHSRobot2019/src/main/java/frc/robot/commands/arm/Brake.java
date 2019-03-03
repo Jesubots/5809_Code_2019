@@ -8,22 +8,17 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
 import frc.robot.Robot;
-import frc.robot.RobotMap.Joint;
 
-public class FlipArm extends Command {
-  public FlipArm() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+public class Brake extends Command {
+  public Brake() {
+    requires(Robot.pneumatics);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    setTimeout(3);
-    Robot.armAssembly.StartPotPID(90 + (-OI.getArmDir() + Math.abs(90 - Robot.armAssembly.getArmAngle())), Joint.kARM);
-    OI.setArmDir(OI.getArmDir() * -1);
+    Robot.pneumatics.brakeOn();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -34,7 +29,7 @@ public class FlipArm extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isTimedOut();
+    return true;
   }
 
   // Called once after isFinished returns true

@@ -38,6 +38,7 @@ public class MoveArm extends Command {
       //turn this boolean off to let the PID turn on when an input is great enough
       compensating = false;
     } else {
+      Robot.pneumatics.brakeOff();
       if(!compensating){
         //input turns on only if it isn't already on (hence the boolean)
         //PID is turned on for the wrist to go to the angle perpendicular to the ground

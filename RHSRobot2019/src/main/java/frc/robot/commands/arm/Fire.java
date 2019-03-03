@@ -8,22 +8,25 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
-import frc.robot.Robot;
-import frc.robot.RobotMap.Joint;
 
-public class FlipArm extends Command {
-  public FlipArm() {
+public class Fire extends Command {
+  private boolean projectile = true;
+
+  public Fire() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+  }
+
+  /*
+  * takes a boolean - true is for firing ball, false is for hatch
+  */
+  public Fire(boolean input){
+    projectile = input;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    setTimeout(3);
-    Robot.armAssembly.StartPotPID(90 + (-OI.getArmDir() + Math.abs(90 - Robot.armAssembly.getArmAngle())), Joint.kARM);
-    OI.setArmDir(OI.getArmDir() * -1);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -34,7 +37,7 @@ public class FlipArm extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isTimedOut();
+    return false;
   }
 
   // Called once after isFinished returns true

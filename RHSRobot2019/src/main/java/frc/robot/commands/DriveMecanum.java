@@ -99,7 +99,7 @@ public class DriveMecanum extends Command {
     //Robot.driveTrain.mecanumDrive(fl, fr, bl, br);
 
     //System.out.println("navx yaw = " + Robot.driveTrain.ahrs.getYaw());
-    Robot.driveTrain.mecanum.driveCartesian(xInput, -yInput, -tInput); //-Robot.driveTrain.ahrs.getYaw());
+    Robot.driveTrain.mecanum.driveCartesian(xInput * OI.getArmDir(), -yInput * OI.getArmDir(), -tInput); //-Robot.driveTrain.ahrs.getYaw());
   }
 
   // Make this return true when this Command no longer needs to run execute()

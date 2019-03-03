@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveMecanum;
 import frc.robot.subsystems.ArmAssembly;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Pneumatics;
 
 //not sure if we need "Timed Robot", as I believe we used Iterative last year,
 //but this is the automatic for a cmd based robot project
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
   public static OI m_oi;
   public static DriveTrain driveTrain = new DriveTrain();
   public static ArmAssembly armAssembly = new ArmAssembly();
+  public static Pneumatics pneumatics = new Pneumatics();
 
   
 

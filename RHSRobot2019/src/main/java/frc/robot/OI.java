@@ -14,7 +14,9 @@ import frc.robot.RobotMap.Joint;
 import frc.robot.commands.Climb;
 import frc.robot.commands.PID.JointToAngle;
 import frc.robot.commands.arm.FlipArm;
+import frc.robot.commands.arm.IntakeBall;
 import frc.robot.commands.arm.routines.PickupBallGround;
+import frc.robot.commands.arm.routines.PickupHatch;
 import frc.robot.commands.arm.routines.PlaceHatch;
 import frc.robot.commands.arm.routines.PositionArm;
 import frc.robot.commands.arm.routines.ShootBall;
@@ -42,22 +44,43 @@ public class OI {
   public void initButtons(){
     //"SW" indicates "should work", "NW" indicates "needs work"
 
-    OI.flipArm_b.whenPressed(new FlipArm());
+    OI.flipArm_b.whenPressed(new FlipArm()); //SW
     OI.flipArm_b.whenPressed(new JointToAngle(Joint.kARM, Robot.armAssembly.getArmAngle() * -1, 2)); //SW
 
-    OI.ballGroundPickup_b.whenPressed(new PickupBallGround()); //NW
+    if(Robot.armAssembly.getArmPosition() == ArmPosition.kBALL_PICKUP){
+      OI.ballGroundPickup_b.whenPressed(new PickupBallGround()); //NW
+    } else {
+      OI.ballGroundPickup_b.whenPressed(new PositionArm(ArmPosition.kBALL_PICKUP));
+      OI.ballGroundPickup_b.whenPressed(new IntakeBall());
+    }
 
     OI.intakePosition_b.whenPressed(new JointToAngle(Joint.kINTAKE, RobotMap.MAXIMUM_INTAKE_ANGLE, 2)); //SW
 
-    OI.hatchWallPickup_b.whenPressed(new PositionArm(ArmPosition.kHATCH)); //NW
 
-    OI.hatchPlace_b.whenPressed(new PlaceHatch()); //NW
+    if(Robot.armAssembly.getArmPosition() == ArmPosition.kHATCH)
+      OI.hatchPlace_b.whenPressed(new PickupHatch()); //NW
+    else
+      OI.hatchPlace_b.whenPressed(new PositionArm(ArmPosition.kHATCH));
 
-    OI.shootRocketLow_b.whenPressed(new ShootBall(BallTarget.kLOW)); //NW
+    if(Robot.armAssembly.getArmPosition() == ArmPosition.kHATCH)
+      OI.hatchPlace_b.whenPressed(new PlaceHatch()); //NW
+    else
+      OI.hatchPlace_b.whenPressed(new PositionArm(ArmPosition.kHATCH));
 
-    OI.shootRocketMid_b.whenPressed(new ShootBall(BallTarget.kMID)); //NW
+    if(Robot.armAssembly.getArmPosition() == ArmPosition.kSHOOT_LOW)
+      OI.shootRocketLow_b.whenPressed(new ShootBall(BallTarget.kLOW)); //NW
+    else
+      OI.shootRocketLow_b.whenPressed(new PositionArm(ArmPosition.kSHOOT_LOW));
 
-    OI.shootCargo_b.whenPressed(new ShootBall(BallTarget.kCARGO)); //NW
+    if(Robot.armAssembly.getArmPosition() == ArmPosition.kSHOOT_MID)
+      OI.shootRocketMid_b.whenPressed(new ShootBall(BallTarget.kMID)); //NW
+    else
+      OI.shootRocketMid_b.whenPressed(new PositionArm(ArmPosition.kSHOOT_MID)); //NW
+
+    if(Robot.armAssembly.getArmPosition() == ArmPosition.kSHOOT_CARGO)
+      OI.shootRocketMid_b.whenPressed(new ShootBall(BallTarget.kCARGO)); //NW
+    else
+      OI.shootRocketMid_b.whenPressed(new PositionArm(ArmPosition.kSHOOT_CARGO)); //NW
 
     OI.climb_b.whenPressed(new Climb()); //NW
   }

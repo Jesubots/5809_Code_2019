@@ -18,7 +18,8 @@ public class RobotMap {
 	public static final int rightClimber_motor_port = 0;
 	//solenoid ports
 	public static final int leftPunch_sol_port = 0;
-	public static final int rightPunch_sol_port = 0;
+	public static final int rightPunch_sol_port = 1;
+	public static final int brake_sol_port = 2;
 
 	//PID values for encoders on drive train
 	public class PolarPIDMap { 
@@ -53,8 +54,8 @@ public class RobotMap {
 		//Potentiometers
 		public static final int topFinger_pot_port = 0;
 		public static final int bottomFinger_pot_port = 1;
-		public static final int wrist_pot_port = 2;
-		public static final int intake_pot_port = 3;
+		public static final int rightIntake_pot_port = 2;
+		public static final int leftIntake_pot_port = 3;
 	}
 
 	public enum Joint {
@@ -70,7 +71,9 @@ public class RobotMap {
 		kBALL_PICKUP,
 		kSHOOT_LOW,
 		kSHOOT_MID,
-		kSHOOT_CARGO
+		kSHOOT_CARGO,
+		kDEFAULT,
+		kHOLDING
 	}
 
 	public enum BallTarget {

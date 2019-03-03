@@ -40,13 +40,13 @@ public class PotPID extends PIDSubsystem {
     if(joint == Joint.kARM){
       return Robot.armAssembly.getArmAngle();
     } else if(joint == Joint.kINTAKE){
-      return Robot.armAssembly.intake_pot.get();
+      return ((Robot.armAssembly.leftIntake_pot.get() + Robot.armAssembly.rightIntake_pot.get()) / 2);
     } else if(joint == Joint.kTOP_FINGER){
       return Robot.armAssembly.topFinger_pot.get();
     } else if(joint == Joint.kBOTTOM_FINGER){
       return Robot.armAssembly.bottomFinger_pot.get();
     } else if(joint == Joint.kWRIST){
-      return Robot.armAssembly.wrist_pot.get();
+      return Robot.armAssembly.getWristAngle();
     } else {
       System.out.println("Cannot return PID input. No motor selected.");
       return -1;
@@ -60,6 +60,7 @@ public class PotPID extends PIDSubsystem {
       Robot.armAssembly.moveJoint(Robot.armAssembly.armMaster_motor, output);
     } else if(joint == Joint.kINTAKE){
       Robot.armAssembly.moveJoint(Robot.armAssembly.rightIntakeArm_motor, output);
+      Robot.armAssembly.moveJoint(Robot.armAssembly.leftIntakeArm_motor, output);
     } else if(joint == Joint.kTOP_FINGER){
       Robot.armAssembly.moveJoint(Robot.armAssembly.topFinger_motor, output);
     } else if(joint == Joint.kBOTTOM_FINGER){

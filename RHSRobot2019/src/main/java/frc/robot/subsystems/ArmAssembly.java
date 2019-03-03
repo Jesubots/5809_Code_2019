@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import frc.robot.RobotMap;
+import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.Joint;
 import frc.robot.commands.arm.MoveArm;
 import frc.robot.subsystems.PID.PotPID;
@@ -26,7 +27,7 @@ import frc.robot.subsystems.PID.PotPID;
 public class ArmAssembly extends Subsystem {
   public VictorSPX topFinger_motor = new VictorSPX(RobotMap.ArmAssemblyMap.topFinger_motor_port);
   public VictorSPX bottomFinger_motor = new VictorSPX(RobotMap.ArmAssemblyMap.bottomFinger_motor_port);
-  public VictorSPX wrist_motor = new VictorSPX(RobotMap.ArmAssemblyMap.wrist_motor_port);
+  public WPI_TalonSRX wrist_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.wrist_motor_port);
   public WPI_TalonSRX armMaster_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.armMaster_motor_port);
   public WPI_TalonSRX armFollower_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.armFollower_motor_port);
   public WPI_TalonSRX leftIntakeEnd_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.leftIntakeEnd_motor_port);
@@ -36,14 +37,23 @@ public class ArmAssembly extends Subsystem {
 
   public Potentiometer topFinger_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.topFinger_pot_port, 360, 30);
   public Potentiometer bottomFinger_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.bottomFinger_pot_port, 360, 30);
-  public Potentiometer wrist_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.wrist_pot_port, 360, 30);
-  public Potentiometer intake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.intake_pot_port, 360, 30);
+  public Potentiometer leftIntake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.leftIntake_pot_port, 360, 30);
+  public Potentiometer rightIntake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.rightIntake_pot_port, 360, 30);
 
+  private ArmPosition armPosition = ArmPosition.kDEFAULT;
   public PotPID potPID = new PotPID();
 
   @Override
   public void initDefaultCommand() {
     setDefaultCommand(new MoveArm());
+  }
+
+  public ArmPosition getArmPosition(){
+    return armPosition;
+  }
+
+  public void setArmPosition(ArmPosition position){
+    armPosition = position;
   }
 
   public void StartPotPID(double angle, Joint joint){
@@ -73,18 +83,26 @@ public class ArmAssembly extends Subsystem {
     angle += 30.96;
     return angle;
   }
+
+  public double getWristAngle(){
+    double angle = 0.0;
+    wrist_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    double encRaw = armMaster_motor.getSelectedSensorPosition();
+    angle = encRaw*(360/4096);
+    return angle;
+  }
   
   public double getPotAngle(Joint joint){
     if(joint == Joint.kARM){
       return getArmAngle();
     } else if(joint == Joint.kINTAKE){
-      return intake_pot.get();
+      return ((leftIntake_pot.get() + rightIntake_pot.get()) / 2);
     } else if(joint == Joint.kTOP_FINGER){
       return topFinger_pot.get();
     } else if(joint == Joint.kBOTTOM_FINGER){
       return bottomFinger_pot.get();
     } else if(joint == Joint.kWRIST){
-      return wrist_pot.get();
+      return getWristAngle();
     } else {
       System.out.println("Cannot get potentiometer angle. No joint selected.");
       return 0;

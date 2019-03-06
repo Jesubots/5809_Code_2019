@@ -15,14 +15,14 @@ import frc.robot.RobotMap.Joint;
 /**
  * Add your docs here.
  */
-public class PotPID extends PIDSubsystem {
+public class EncoderPID extends PIDSubsystem {
   private Joint joint;
   /**
    * Add your docs here.
    */
-  public PotPID() {
+  public EncoderPID() {
     // Intert a subsystem name and PID values here
-    super("PotPID", RobotMap.PotPIDMap.kP, RobotMap.PotPIDMap.kI, RobotMap.PotPIDMap.kD);
+    super("EncoderPID", RobotMap.EncoderPIDMap.kP, RobotMap.EncoderPIDMap.kI, RobotMap.EncoderPIDMap.kD);
     // Use these to get going:
     // setSetpoint() - Sets where the PID controller should move the system
     // to
@@ -37,12 +37,10 @@ public class PotPID extends PIDSubsystem {
 
   @Override
   protected double returnPIDInput() {
-    if(joint == Joint.kINTAKE){
-      return ((Robot.armAssembly.leftIntake_pot.get() + Robot.armAssembly.rightIntake_pot.get()) / 2);
-    } else if(joint == Joint.kTOP_FINGER){
-      return Robot.armAssembly.topFinger_pot.get();
-    } else if(joint == Joint.kBOTTOM_FINGER){
-      return Robot.armAssembly.bottomFinger_pot.get();
+    if(joint == Joint.kARM){
+      return Robot.armAssembly.getArmAngle();
+    }else if(joint == Joint.kWRIST){
+      return Robot.armAssembly.getWristAngle();
     } else {
       System.out.println("Cannot return PID input. No motor selected.");
       return -1;
@@ -52,13 +50,10 @@ public class PotPID extends PIDSubsystem {
   @Override
   protected void usePIDOutput(double output) {
     output *= .5;
-    if(joint == Joint.kINTAKE){
-      Robot.armAssembly.moveJoint(Robot.armAssembly.rightIntakeArm_motor, output);
-      Robot.armAssembly.moveJoint(Robot.armAssembly.leftIntakeArm_motor, output);
-    } else if(joint == Joint.kTOP_FINGER){
-      Robot.armAssembly.moveJoint(Robot.armAssembly.topFinger_motor, output);
-    } else if(joint == Joint.kBOTTOM_FINGER){
-      Robot.armAssembly.moveJoint(Robot.armAssembly.bottomFinger_motor, output);
+    if(joint == Joint.kARM){
+      Robot.armAssembly.moveJoint(Robot.armAssembly.armMaster_motor, output);
+    } else if(joint == Joint.kWRIST){
+      Robot.armAssembly.moveJoint(Robot.armAssembly.wrist_motor, output);
     } else {
       System.out.println("Cannot use PID output. No motor selected.");
     }

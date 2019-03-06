@@ -14,12 +14,17 @@ public class RobotMap {
 	public static final double ARM_WRIST_RATIO = 1f;
 	public static final double MAXIMUM_INTAKE_ANGLE = 90f;
 	//climber motors
-	public static final int leftClimber_motor_port = 0;
-	public static final int rightClimber_motor_port = 0;
+	public static final int leftClimber_motor_port = 1;
+	public static final int rightClimber_motor_port = 6;
 	//solenoid ports
 	public static final int leftPunch_sol_port = 0;
 	public static final int rightPunch_sol_port = 1;
 	public static final int brake_sol_port = 2;
+	//dt
+	public static final int backLeft_port = 0;
+	public static final int frontLeft_port = 4;
+	public static final int backRight_port = 7;
+	public static final int frontRight_port = 2;
 
 	//PID values for encoders on drive train
 	public class PolarPIDMap { 
@@ -39,17 +44,26 @@ public class RobotMap {
 		public static final double kToleranceDegrees = 1.0f;
 	}
 
+	//PID values for Encoders on joints
+	public class EncoderPIDMap { 
+		public static final double kP = 0.023;
+		public static final double kI = 0.0026;
+		public static final double kD = 0.25;
+		public static final double kF = 0.1;
+		public static final double kToleranceDegrees = 1.0f;
+	}
+
 	public class ArmAssemblyMap {
 		//Motors
-		public static final int topFinger_motor_port = 0;
-		public static final int bottomFinger_motor_port = 0;
-		public static final int wrist_motor_port = 0;
-		public static final int armMaster_motor_port = 0;
-		public static final int armFollower_motor_port = 0;
-		public static final int leftIntakeEnd_motor_port = 0;
-		public static final int leftIntakeArm_motor_port = 0;
+		public static final int topFinger_motor_port = 7;
+		public static final int bottomFinger_motor_port = 3;
+		public static final int wrist_motor_port = 6;
+		public static final int armMaster_motor_port = 1;
+		public static final int armFollower_motor_port = 3;
+		public static final int leftIntakeEnd_motor_port = 5;
+		public static final int leftIntakeArm_motor_port = 2;
 		public static final int rightIntakeEnd_motor_port = 0;
-		public static final int rightIntakeArm_motor_port = 0;
+		public static final int rightIntakeArm_motor_port = 4;
 
 		//Potentiometers
 		public static final int topFinger_pot_port = 0;

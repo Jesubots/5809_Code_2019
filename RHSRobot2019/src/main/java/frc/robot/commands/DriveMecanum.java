@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.OI;
 import frc.robot.Robot;
+import frc.robot.RobotMap.Joint;
 
 public class DriveMecanum extends Command {
   private double xInput; //stick x axis
@@ -27,7 +28,7 @@ public class DriveMecanum extends Command {
   private float threshold = 0.2f;
 
   public DriveMecanum() {
-      requires(Robot.driveTrain);
+    requires(Robot.driveTrain);
   }
 
   // Called just before this Command runs the first time
@@ -99,6 +100,16 @@ public class DriveMecanum extends Command {
     //Robot.driveTrain.mecanumDrive(fl, fr, bl, br);
 
     //System.out.println("navx yaw = " + Robot.driveTrain.ahrs.getYaw());
+    if(Math.abs(xInput) < .15){
+      xInput = 0;
+    }
+    if(Math.abs(yInput) < .15){
+      yInput = 0;
+    }
+    if(Math.abs(tInput) < .15){
+      tInput = 0;
+    }
+    
     Robot.driveTrain.mecanum.driveCartesian(xInput * OI.getArmDir(), -yInput * OI.getArmDir(), -tInput); //-Robot.driveTrain.ahrs.getYaw());
   }
 

@@ -8,6 +8,7 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.BallTarget;
 import frc.robot.RobotMap.Joint;
@@ -15,6 +16,7 @@ import frc.robot.commands.Climb;
 import frc.robot.commands.PID.JointToAngle;
 import frc.robot.commands.arm.FlipArm;
 import frc.robot.commands.arm.IntakeBall;
+import frc.robot.commands.arm.MoveArm;
 import frc.robot.commands.arm.routines.PickupBallGround;
 import frc.robot.commands.arm.routines.PickupHatch;
 import frc.robot.commands.arm.routines.PlaceHatch;
@@ -30,16 +32,29 @@ public class OI {
   private static double wristAngle = 0;
   private static int armDir = 1;
   //buttons, denoted by _b
-  public static JoystickButton hatchGroundPickup_b = new JoystickButton(buttonPanel, 0);
+  public static JoystickButton hatchGroundPickup_b = new JoystickButton(buttonPanel, 10);
   public static JoystickButton hatchWallPickup_b = new JoystickButton(buttonPanel, 1);
   public static JoystickButton hatchPlace_b = new JoystickButton(buttonPanel, 2);
   public static JoystickButton ballGroundPickup_b = new JoystickButton(buttonPanel, 3);
   public static JoystickButton shootRocketLow_b = new JoystickButton(buttonPanel, 4);
   public static JoystickButton shootCargo_b = new JoystickButton(buttonPanel, 5);
   public static JoystickButton shootRocketMid_b = new JoystickButton(buttonPanel, 6);
-  public static JoystickButton flipArm_b = new JoystickButton(buttonPanel, 7);
+  public static JoystickButton flipArm_b = new JoystickButton(buttonPanel, 9);
   public static JoystickButton climb_b = new JoystickButton(driverStick, 5);
-  public static JoystickButton intakePosition_b = new JoystickButton(driverStick, 0);
+  public static JoystickButton intakePosition_b = new JoystickButton(driverStick, 1);
+  public static JoystickButton armUp_b = new JoystickButton(buttonPanel, 7);
+  public static JoystickButton armDown_b = new JoystickButton(buttonPanel, 8);
+
+  public OI(){
+    initButtons();
+  }
+
+  public void dashboardEncoderReset(){
+    if(SmartDashboard.getBoolean("Zero Arm/Wrist Encoders", false)){
+      Robot.armAssembly.resetJointEncoders();
+    }
+  }
+  
   //methods
   public void initButtons(){
     //"SW" indicates "should work", "NW" indicates "needs work"
@@ -83,6 +98,9 @@ public class OI {
       OI.shootRocketMid_b.whenPressed(new PositionArm(ArmPosition.kSHOOT_CARGO)); //NW
 
     OI.climb_b.whenPressed(new Climb()); //NW
+
+    OI.armDown_b.whileHeld(new MoveArm(-.25));
+    OI.armDown_b.whileHeld(new MoveArm(.25));
   }
 
   public static int getArmDir(){

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotMap.Joint;
 import frc.robot.commands.DriveMecanum;
 import frc.robot.subsystems.ArmAssembly;
 import frc.robot.subsystems.DriveTrain;
@@ -25,8 +26,6 @@ public class Robot extends TimedRobot {
   public static ArmAssembly armAssembly = new ArmAssembly();
   public static Pneumatics pneumatics = new Pneumatics();
 
-  
-
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -37,11 +36,24 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", new DriveMecanum());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+    SmartDashboard.putBoolean("Zero Arm/Wrist Encoders", false);
+    SmartDashboard.putBoolean("Brake Solenoid", false);
+    SmartDashboard.putBoolean("Punch Solenoids", false);
   }
 
   //runs periodically while active
   @Override
   public void robotPeriodic() {
+    if(SmartDashboard.getBoolean("Punch Solenoids", false)){
+      Robot.pneumatics.punchOn();
+    } else {
+      Robot.pneumatics.punchOff();
+    }
+    if(SmartDashboard.getBoolean("Brake Solenoid", false)){
+      Robot.pneumatics.brakeOn();
+    } else {
+      Robot.pneumatics.brakeOff();
+    }
   }
 
   //runs when robot is disabled
@@ -92,6 +104,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+    System.out.print("top finger = " + Robot.armAssembly.getPotAngle(Joint.kTOP_FINGER) + " ");
+    System.out.println("bottom finger = " + Robot.armAssembly.getPotAngle(Joint.kBOTTOM_FINGER));
+    System.out.println("left intake = " + Robot.armAssembly.getPotAngle(Joint.kINTAKE));
   }
 
   //runs periodically during test mode

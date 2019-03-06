@@ -19,9 +19,14 @@ public class Pneumatics extends Subsystem {
   Solenoid rightPunch_sol = new Solenoid(RobotMap.rightPunch_sol_port);
   Solenoid brake_sol = new Solenoid(RobotMap.brake_sol_port);
 
-  public void punch(){
+  public void punchOn(){
     leftPunch_sol.set(true);
     rightPunch_sol.set(true);
+  }
+
+  public void punchOff(){
+    leftPunch_sol.set(false);
+    rightPunch_sol.set(false);
   }
 
   public void brakeOn(){

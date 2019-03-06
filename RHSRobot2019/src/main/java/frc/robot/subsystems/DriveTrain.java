@@ -17,15 +17,16 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import frc.robot.OI;
+import frc.robot.RobotMap;
 import frc.robot.commands.DriveMecanum;
 import frc.robot.subsystems.PID.PolarXPID;
 import frc.robot.subsystems.PID.PolarYPID;
 
 public class DriveTrain extends Subsystem {
-  public WPI_TalonSRX frontRight_motor = new WPI_TalonSRX(0);
-  public WPI_TalonSRX frontLeft_motor = new WPI_TalonSRX(3);
-  public WPI_TalonSRX backLeft_motor = new WPI_TalonSRX(1);
-  public WPI_TalonSRX backRight_motor = new WPI_TalonSRX(2);
+  public WPI_TalonSRX frontRight_motor = new WPI_TalonSRX(RobotMap.frontRight_port);
+  public WPI_TalonSRX frontLeft_motor = new WPI_TalonSRX(RobotMap.frontLeft_port);
+  public WPI_TalonSRX backLeft_motor = new WPI_TalonSRX(RobotMap.backLeft_port);
+  public WPI_TalonSRX backRight_motor = new WPI_TalonSRX(RobotMap.backRight_port);
   public AHRS ahrs = new AHRS(Port.kMXP);
   Joystick stick = OI.driverStick;
 
@@ -39,10 +40,11 @@ public class DriveTrain extends Subsystem {
     frontLeft_motor.setNeutralMode(NeutralMode.Brake);
     backRight_motor.setNeutralMode(NeutralMode.Brake);
     backLeft_motor.setNeutralMode(NeutralMode.Brake);
-    frontLeft_motor.setSafetyEnabled(false);
-    frontRight_motor.setSafetyEnabled(false);
-    backLeft_motor.setSafetyEnabled(false);
-    backRight_motor.setSafetyEnabled(false);
+    frontLeft_motor.setSafetyEnabled(true);
+    frontRight_motor.setSafetyEnabled(true);
+    backLeft_motor.setSafetyEnabled(true);
+    backRight_motor.setSafetyEnabled(true);
+    
 
     ahrs.zeroYaw();
   }

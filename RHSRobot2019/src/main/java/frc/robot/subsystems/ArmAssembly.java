@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.Joint;
-import frc.robot.commands.arm.MoveArm;
+import frc.robot.subsystems.PID.EncoderPID;
 import frc.robot.subsystems.PID.PotPID;
 
 /**
@@ -35,17 +35,25 @@ public class ArmAssembly extends Subsystem {
   public VictorSPX rightIntakeEnd_motor = new VictorSPX(RobotMap.ArmAssemblyMap.rightIntakeEnd_motor_port);
   public VictorSPX rightIntakeArm_motor = new VictorSPX(RobotMap.ArmAssemblyMap.rightIntakeArm_motor_port);
 
-  public Potentiometer topFinger_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.topFinger_pot_port, 360, 30);
-  public Potentiometer bottomFinger_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.bottomFinger_pot_port, 360, 30);
-  public Potentiometer leftIntake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.leftIntake_pot_port, 360, 30);
-  public Potentiometer rightIntake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.rightIntake_pot_port, 360, 30);
+  public Potentiometer topFinger_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.topFinger_pot_port, 3600, -2448);
+  public Potentiometer bottomFinger_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.bottomFinger_pot_port, 3600, -2190);
+  public Potentiometer leftIntake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.leftIntake_pot_port, 3600, -291);
+  public Potentiometer rightIntake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.rightIntake_pot_port, 3600, 0);
 
   private ArmPosition armPosition = ArmPosition.kDEFAULT;
-  public PotPID potPID = new PotPID();
+  public PotPID frontFingerPID = new PotPID();
+  public PotPID backFingerPID = new PotPID();
+  public PotPID intakePID = new PotPID();
+  public EncoderPID armPID = new EncoderPID();
+  public EncoderPID wristPID = new EncoderPID();
+
+  public ArmAssembly(){
+    armFollower_motor.follow(armMaster_motor);
+  }
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new MoveArm());
+    //setDefaultCommand(new MoveArm());
   }
 
   public ArmPosition getArmPosition(){
@@ -57,14 +65,42 @@ public class ArmAssembly extends Subsystem {
   }
 
   public void StartPotPID(double angle, Joint joint){
-    potPID.setJoint(joint);
-    potPID.setSetpoint(angle);
-    potPID.enable();
+    if(joint == Joint.kARM){
+      armPID.setJoint(joint);
+      armPID.setSetpoint(angle);
+      armPID.enable();
+    } else if(joint == Joint.kBOTTOM_FINGER){
+      backFingerPID.setJoint(joint);
+      backFingerPID.setSetpoint(angle);
+      backFingerPID.enable();
+    } else if(joint == Joint.kINTAKE){
+      intakePID.setJoint(joint);
+      intakePID.setSetpoint(angle);
+      intakePID.enable();
+    } else if(joint == Joint.kTOP_FINGER){
+      frontFingerPID.setJoint(joint);
+      frontFingerPID.setSetpoint(angle);
+      frontFingerPID.enable();
+    } else if(joint == Joint.kWRIST){
+      wristPID.setJoint(joint);
+      wristPID.setSetpoint(angle);
+      wristPID.enable();
+    }
+    
   }
 
   public void StopPotPID(Joint joint){
-    potPID.disable();
-    cancelMotors(joint);
+    if(joint == Joint.kARM){
+      armPID.disable();
+    } else if(joint == Joint.kBOTTOM_FINGER){
+      backFingerPID.disable();
+    } else if(joint == Joint.kINTAKE){
+      intakePID.disable();
+    } else if(joint == Joint.kTOP_FINGER){
+      frontFingerPID.disable();
+    } else if(joint == Joint.kWRIST){
+      wristPID.disable();
+    }
   }
 
   public void moveJoint(VictorSPX victor, double output){
@@ -91,12 +127,20 @@ public class ArmAssembly extends Subsystem {
     angle = encRaw*(360/4096);
     return angle;
   }
+
+  public void resetJointEncoders(){
+    wrist_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    wrist_motor.setSelectedSensorPosition(0);
+    armMaster_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    armMaster_motor.setSelectedSensorPosition(0);
+
+  }
   
   public double getPotAngle(Joint joint){
     if(joint == Joint.kARM){
       return getArmAngle();
     } else if(joint == Joint.kINTAKE){
-      return ((leftIntake_pot.get() + rightIntake_pot.get()) / 2);
+      return ((rightIntake_pot.get()));
     } else if(joint == Joint.kTOP_FINGER){
       return topFinger_pot.get();
     } else if(joint == Joint.kBOTTOM_FINGER){

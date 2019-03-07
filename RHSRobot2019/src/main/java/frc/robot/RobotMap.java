@@ -17,9 +17,12 @@ public class RobotMap {
 	public static final int leftClimber_motor_port = 1;
 	public static final int rightClimber_motor_port = 6;
 	//solenoid ports
-	public static final int leftPunch_sol_port = 0;
-	public static final int rightPunch_sol_port = 1;
-	public static final int brake_sol_port = 2;
+	public static final int leftPunchForward_sol_port = 5;
+	public static final int rightPunchForward_sol_port = 3;
+	public static final int brakeForward_sol_port = 1;
+	public static final int leftPunchReverse_sol_port = 4;
+	public static final int rightPunchReverse_sol_port = 2;
+	public static final int brakeReverse_sol_port = 0;
 	//dt
 	public static final int backLeft_port = 0;
 	public static final int frontLeft_port = 4;

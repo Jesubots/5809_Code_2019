@@ -15,26 +15,36 @@ import frc.robot.RobotMap;
  * Add your docs here.
  */
 public class Pneumatics extends Subsystem {
-  Solenoid leftPunch_sol = new Solenoid(RobotMap.leftPunch_sol_port);
-  Solenoid rightPunch_sol = new Solenoid(RobotMap.rightPunch_sol_port);
-  Solenoid brake_sol = new Solenoid(RobotMap.brake_sol_port);
+  Solenoid leftPunchForward_sol = new Solenoid(RobotMap.leftPunchForward_sol_port);
+  Solenoid rightPunchForward_sol = new Solenoid(RobotMap.rightPunchForward_sol_port);
+  Solenoid brakeForward_sol = new Solenoid(RobotMap.brakeForward_sol_port);
+  Solenoid leftPunchReverse_sol = new Solenoid(RobotMap.leftPunchReverse_sol_port);
+  Solenoid rightPunchReverse_sol = new Solenoid(RobotMap.rightPunchReverse_sol_port);
+  Solenoid brakeReverse_sol = new Solenoid(RobotMap.brakeReverse_sol_port);
 
   public void punchOn(){
-    leftPunch_sol.set(true);
-    rightPunch_sol.set(true);
+    leftPunchForward_sol.set(true);
+    rightPunchForward_sol.set(true);
+    leftPunchReverse_sol.set(false);
+    rightPunchReverse_sol.set(false);
   }
 
   public void punchOff(){
-    leftPunch_sol.set(false);
-    rightPunch_sol.set(false);
+    leftPunchForward_sol.set(false);
+    rightPunchForward_sol.set(false);
+    leftPunchReverse_sol.set(true);
+    rightPunchReverse_sol.set(true);
+    
   }
 
   public void brakeOn(){
-    brake_sol.set(true);
+    brakeForward_sol.set(true);
+    brakeReverse_sol.set(false);
   }
 
   public void brakeOff(){
-    brake_sol.set(false);
+    brakeForward_sol.set(false);
+    brakeReverse_sol.set(true);
   }
 
   @Override

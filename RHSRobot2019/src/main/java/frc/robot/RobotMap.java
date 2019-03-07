@@ -13,6 +13,7 @@ public class RobotMap {
 	public static final double ENCODER_CONVERSION_CONSTANT = 2144.660585;
 	public static final double ARM_WRIST_RATIO = 1f;
 	public static final double MAXIMUM_INTAKE_ANGLE = 90f;
+	public static final double climberTimeout = 1f;
 	//climber motors
 	public static final int leftClimber_motor_port = 1;
 	public static final int rightClimber_motor_port = 6;
@@ -20,11 +21,17 @@ public class RobotMap {
 	public static final int leftPunch_sol_port = 0;
 	public static final int rightPunch_sol_port = 1;
 	public static final int brake_sol_port = 2;
-	//dt
+	//drivetrain
 	public static final int backLeft_port = 0;
 	public static final int frontLeft_port = 4;
 	public static final int backRight_port = 7;
 	public static final int frontRight_port = 2;
+	//sensors and stuff
+	public static final int rightPistonMag_port = 0;
+	public static final int leftPistonMag_port = 1;
+	public static final int ultrasonicOut_port = 2;
+	public static final int ultrasonicIn_port = 3;
+
 
 	//PID values for encoders on drive train
 	public class PolarPIDMap { 
@@ -37,6 +44,23 @@ public class RobotMap {
 
 	//PID values for potentiometers on joints
 	public class PotPIDMap { 
+		public static final double kP = 0.1;
+		public static final double kI = 0.001;
+		public static final double kD = 1.0;
+		public static final double kF = 0.0001;
+		public static final double kToleranceDegrees = 1.0f;
+	}
+
+	//PID values for Encoders on joints
+	public class EncoderJointPIDMap { 
+		public static final double kP = 0.;
+		public static final double kI = 0.0026;
+		public static final double kD = 0.25;
+		public static final double kF = 0.1;
+		public static final double kToleranceDegrees = 1.0f;
+	}
+
+	public class PivotTurnPIDMap {
 		public static final double kP = 0.023;
 		public static final double kI = 0.0026;
 		public static final double kD = 0.25;
@@ -44,8 +68,7 @@ public class RobotMap {
 		public static final double kToleranceDegrees = 1.0f;
 	}
 
-	//PID values for Encoders on joints
-	public class EncoderPIDMap { 
+	public class CameraPIDMap {
 		public static final double kP = 0.023;
 		public static final double kI = 0.0026;
 		public static final double kD = 0.25;

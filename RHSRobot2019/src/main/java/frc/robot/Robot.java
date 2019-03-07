@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap.Joint;
 import frc.robot.commands.DriveMecanum;
 import frc.robot.subsystems.ArmAssembly;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Pneumatics;
 
@@ -25,6 +27,9 @@ public class Robot extends TimedRobot {
   public static DriveTrain driveTrain = new DriveTrain();
   public static ArmAssembly armAssembly = new ArmAssembly();
   public static Pneumatics pneumatics = new Pneumatics();
+  public static Climber climber = new Climber();
+  public static double visionHorizontalOffset = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+  public static double visionVerticalOffset = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -112,5 +117,13 @@ public class Robot extends TimedRobot {
   //runs periodically during test mode
   @Override
   public void testPeriodic() {
+  }
+
+  public static double getHorizontalOffset(){
+    return visionHorizontalOffset;
+  }
+
+  public static double getVerticalOffset(){
+    return visionVerticalOffset;
   }
 }

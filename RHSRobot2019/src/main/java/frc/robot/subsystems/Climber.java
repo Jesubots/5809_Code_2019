@@ -7,7 +7,9 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.VictorSP;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
@@ -15,12 +17,27 @@ import frc.robot.RobotMap;
  * Add your docs here.
  */
 public class Climber extends Subsystem {
-  VictorSP rightClimber_motor = new VictorSP(RobotMap.rightClimber_motor_port);
-  VictorSP leftClimber_motor = new VictorSP(RobotMap.leftClimber_motor_port);
+  VictorSPX rightClimber_motor = new VictorSPX(RobotMap.rightClimber_motor_port);
+  VictorSPX leftClimber_motor = new VictorSPX(RobotMap.leftClimber_motor_port);
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+  }
+
+  public void lift(){
+    rightClimber_motor.set(ControlMode.Current, 1);
+    leftClimber_motor.set(ControlMode.Current, 1);
+  }
+
+  public void descend(){
+    rightClimber_motor.set(ControlMode.Current, -1);
+    leftClimber_motor.set(ControlMode.Current, -1);
+  }
+
+  public void stopLift(){
+    rightClimber_motor.set(ControlMode.Current, 0);
+    leftClimber_motor.set(ControlMode.Current, 0);
   }
 }

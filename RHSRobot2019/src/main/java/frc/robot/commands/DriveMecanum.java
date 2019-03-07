@@ -38,79 +38,21 @@ public class DriveMecanum extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    //the plan is to create a vector from x and y inputs
-    //then to translate that vector into motor values
-    //each motor has a certain vector associated with it
-    //fr -- up-left
-    //fl -- up-right
-    //br -- up-right
-    //bl -- up-left
     xInput = stick.getX();
     yInput = stick.getY();
     tInput = stick.getZ();
-    /*
-    if(Math.abs(stick.getX()) > threshold)
-      xInput = stick.getX();
-    else
-      xInput = 0.0f;
-    //System.out.println("x = " + xInput);
-    if(Math.abs(stick.getY()) > threshold)
-      yInput = stick.getY();
-    else
-      yInput = 0.0f;
-    //System.out.println("y = " + yInput);
-    if(Math.abs(stick.getZ()) > threshold)
-      tInput = stick.getZ();
-    else
-      tInput = 0.0f;
-    */
-    //System.out.println("twist = " + yInput);
-    theta = Math.atan(yInput/xInput);
-    //System.out.println("angle = " + theta);
-    mag = Math.sqrt((xInput*xInput) + (yInput*yInput));
-    fl = Math.cos(theta - (Math.PI / 4));
-    br = -Math.cos(theta - (Math.PI / 4));
-    fr = -Math.sin(theta - (Math.PI / 4));
-    bl = Math.sin(theta - (Math.PI / 4));
 
-    if(Math.abs(stick.getZ()) > threshold){
-      fl = -stick.getZ();
-      br = -stick.getZ();
-      fr = -stick.getZ();
-      bl = -stick.getZ();
-    }
-    /*
-    if(Math.abs(fl) == Math.sin(45)){
-      fl = Math.signum(fl);
-    }
-    if(Math.abs(fr) == Math.sin(45)){
-      fr = Math.signum(fr);
-    }
-    if(Math.abs(bl) == Math.sin(45)){
-      bl = Math.signum(bl);
-    }
-    if(Math.abs(br) == Math.sin(45)){
-      br = Math.signum(br);
-    }
-    */
-    //System.out.println("final fl = " + fl);
-    //System.out.println("final fr = " + fr);
-    //System.out.println("final bl = " + bl);
-    //%System.out.println("final br = " + br);
-    //Robot.driveTrain.mecanumDrive(fl, fr, bl, br);
-
-    //System.out.println("navx yaw = " + Robot.driveTrain.ahrs.getYaw());
-    if(Math.abs(xInput) < .15){
+    if(Math.abs(xInput) < .1){
       xInput = 0;
     }
-    if(Math.abs(yInput) < .15){
+    if(Math.abs(yInput) < .1){
       yInput = 0;
     }
-    if(Math.abs(tInput) < .15){
+    if(Math.abs(tInput) < .1){
       tInput = 0;
     }
     
-    Robot.driveTrain.mecanum.driveCartesian(xInput * OI.getArmDir(), -yInput * OI.getArmDir(), -tInput); //-Robot.driveTrain.ahrs.getYaw());
+    Robot.driveTrain.mecanum.driveCartesian(-xInput * OI.getArmDir(), yInput * OI.getArmDir(), -tInput); //-Robot.driveTrain.ahrs.getYaw());
   }
 
   // Make this return true when this Command no longer needs to run execute()

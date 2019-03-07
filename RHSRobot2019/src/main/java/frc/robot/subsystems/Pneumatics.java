@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
@@ -21,6 +22,9 @@ public class Pneumatics extends Subsystem {
   Solenoid leftPunchReverse_sol = new Solenoid(RobotMap.leftPunchReverse_sol_port);
   Solenoid rightPunchReverse_sol = new Solenoid(RobotMap.rightPunchReverse_sol_port);
   Solenoid brakeReverse_sol = new Solenoid(RobotMap.brakeReverse_sol_port);
+
+  public DigitalInput rightPistonMag = new DigitalInput(RobotMap.rightPistonMag_port);
+  public DigitalInput leftPistonMag = new DigitalInput(RobotMap.leftPistonMag_port);
 
   public void punchOn(){
     leftPunchForward_sol.set(true);

@@ -20,8 +20,8 @@ public class PickupBallGround extends CommandGroup {
   public PickupBallGround() {
     addSequential(new PositionArm(ArmPosition.kBALL_PICKUP));
     addSequential(new IntakeBall());
-    addSequential(new JointToAngle(Joint.kTOP_FINGER, 180, 2));
-    addParallel(new JointToAngle(Joint.kBOTTOM_FINGER, 0, 2));
+    addSequential(new JointToAngle(Joint.kTOP_FINGER, 190, 2));
+    addParallel(new JointToAngle(Joint.kBOTTOM_FINGER, 190, 2));
     addSequential(new PositionArm(ArmPosition.kHOLDING));
   }
 }

@@ -43,7 +43,7 @@ public class DrivePolarEncoders extends Command {
     setInterruptible(true);
     //make sure the command ends if it's not done fast enough
 		setTimeout(driveTimeout);
-    
+    angle *= Math.PI / 180; 
     //convert polar coordinates to X and Y components
     xDist = distance * Math.cos(angle - (Math.PI / 4));
     yDist = distance * Math.sin(angle - (Math.PI / 4));

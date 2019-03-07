@@ -13,12 +13,16 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.Ultrasonic.Unit;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import frc.robot.OI;
 import frc.robot.RobotMap;
 import frc.robot.commands.DriveMecanum;
+import frc.robot.subsystems.PID.CameraPID;
+import frc.robot.subsystems.PID.PivotTurnPID;
 import frc.robot.subsystems.PID.PolarXPID;
 import frc.robot.subsystems.PID.PolarYPID;
 
@@ -28,12 +32,15 @@ public class DriveTrain extends Subsystem {
   public WPI_TalonSRX backLeft_motor = new WPI_TalonSRX(RobotMap.backLeft_port);
   public WPI_TalonSRX backRight_motor = new WPI_TalonSRX(RobotMap.backRight_port);
   public AHRS ahrs = new AHRS(Port.kMXP);
+  public Ultrasonic us = new Ultrasonic(RobotMap.ultrasonicOut_port, RobotMap.ultrasonicIn_port, Unit.kInches);
   Joystick stick = OI.driverStick;
 
   public MecanumDrive mecanum = new MecanumDrive(frontLeft_motor, backLeft_motor, frontRight_motor, backRight_motor);
 
   public PolarXPID encXPID = new PolarXPID();
   public PolarYPID encYPID = new PolarYPID();
+  public PivotTurnPID pivotTurnPID = new PivotTurnPID();
+  public CameraPID cameraPID = new CameraPID();
 
   public DriveTrain() {
     frontRight_motor.setNeutralMode(NeutralMode.Brake);
@@ -76,15 +83,35 @@ public class DriveTrain extends Subsystem {
   }
 
   public void DrivePolarXPID(double distance) {
-    System.out.println("Encoder PID (x) started...");
+    System.out.println("EncoderPID (x) started...");
     encXPID.setSetpoint(distance);
     encXPID.enable();
   }
 
   public void DrivePolarYPID(double distance) {
-    System.out.println("Encoder PID (y) started...");
+    System.out.println("EncoderPID (y) started...");
     encYPID.setSetpoint(distance);
     encYPID.enable();
+  }
+
+  public void StartPivotTurnPID(double angle) {
+    System.out.println("PivotTurnPID started...");
+    pivotTurnPID.setSetpoint(angle);
+    pivotTurnPID.enable();
+  }
+
+  public void StartCameraPID() {
+    System.out.println("CameraPID started...");
+    cameraPID.setSetpoint(0);//limelight angle);
+    cameraPID.enable();
+  }
+
+  public void StopCameraPID() {
+    cameraPID.disable();
+  }
+
+  public void StopPivotTurnPID() {
+    pivotTurnPID.disable();
   }
 
   public void StopPolarXPID() {

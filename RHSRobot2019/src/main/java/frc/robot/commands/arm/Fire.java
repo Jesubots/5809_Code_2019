@@ -8,6 +8,7 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
 
 public class Fire extends Command {
   private boolean projectile = true;
@@ -27,17 +28,25 @@ public class Fire extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    setTimeout(2);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if(projectile){
+
+    } else {
+      if(Robot.pneumatics.leftPistonMag.get()){
+
+      }
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return isTimedOut();
   }
 
   // Called once after isFinished returns true

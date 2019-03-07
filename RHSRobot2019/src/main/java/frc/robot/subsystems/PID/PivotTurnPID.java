@@ -8,21 +8,20 @@
 package frc.robot.subsystems.PID;
 
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
-import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.RobotMap.Joint;
+import frc.robot.Robot;
 
 /**
  * Add your docs here.
  */
-public class EncoderPID extends PIDSubsystem {
-  private Joint joint;
+public class PivotTurnPID extends PIDSubsystem {
   /**
    * Add your docs here.
    */
-  public EncoderPID() {
+  public PivotTurnPID() {
     // Intert a subsystem name and PID values here
-    super("EncoderPID", RobotMap.EncoderJointPIDMap.kP, RobotMap.EncoderJointPIDMap.kI, RobotMap.EncoderJointPIDMap.kD);
+    super("PivotTurnPID", RobotMap.PivotTurnPIDMap.kP, RobotMap.PivotTurnPIDMap.kI,
+    RobotMap.PivotTurnPIDMap.kD, RobotMap.PivotTurnPIDMap.kF);
     // Use these to get going:
     // setSetpoint() - Sets where the PID controller should move the system
     // to
@@ -37,29 +36,14 @@ public class EncoderPID extends PIDSubsystem {
 
   @Override
   protected double returnPIDInput() {
-    if(joint == Joint.kARM){
-      return Robot.armAssembly.getArmAngle();
-    }else if(joint == Joint.kWRIST){
-      return Robot.armAssembly.getWristAngle();
-    } else {
-      System.out.println("Cannot return PID input. No motor selected.");
-      return -1;
-    }
+    return Robot.driveTrain.ahrs.getYaw();
   }
 
   @Override
   protected void usePIDOutput(double output) {
-    output *= .5;
-    if(joint == Joint.kARM){
-      Robot.armAssembly.moveJoint(Robot.armAssembly.armMaster_motor, output);
-    } else if(joint == Joint.kWRIST){
-      Robot.armAssembly.moveJoint(Robot.armAssembly.wrist_motor, output);
-    } else {
-      System.out.println("Cannot use PID output. No motor selected.");
-    }
-  }
-
-  public void setJoint(Joint inputJoint){
-    joint = inputJoint;
+    Robot.driveTrain.backRight_motor.set(-output);
+    Robot.driveTrain.frontRight_motor.set(-output);
+    Robot.driveTrain.frontLeft_motor.set(output);
+    Robot.driveTrain.backLeft_motor.set(output);
   }
 }

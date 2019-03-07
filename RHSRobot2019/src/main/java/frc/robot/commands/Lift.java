@@ -5,35 +5,28 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.arm;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.RobotMap;
 import frc.robot.Robot;
 
-public class IntakeBall extends Command {
-  private double input;
-
-  public IntakeBall() {
-    requires(Robot.armAssembly);
-  }
-
-  public IntakeBall(double input){
-    this.input = input;
+public class Lift extends Command {
+  public Lift() {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    setTimeout(5);
+    setTimeout(RobotMap.climberTimeout);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.armAssembly.leftIntakeEnd_motor.set(ControlMode.Current, input);
-    Robot.armAssembly.rightIntakeEnd_motor.set(ControlMode.Current, input);
+    Robot.climber.lift();
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -45,11 +38,13 @@ public class IntakeBall extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.climber.stopLift();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.climber.stopLift();
   }
 }

@@ -38,38 +38,38 @@ public class PositionArm extends CommandGroup {
     if(position == ArmPosition.kHATCH){
       armAngle = 90 + (58 * dir);
       wristAngle = armAngle + 90;
-      topFingerAngle = 45;
-      bottomFingerAngle = 135;
+      topFingerAngle = 90;
+      bottomFingerAngle = 90;
     } //if we want to pickup balls from the ground with the intake
     else if(position == ArmPosition.kBALL_PICKUP){
       armAngle = 90 + (66 * dir);
       wristAngle = 180 + (86 * dir);
-      topFingerAngle = 45;
-      bottomFingerAngle = 135;
+      topFingerAngle = 160;
+      bottomFingerAngle = 160;
     } //if we want to aim for the low rocket goal
     else if(position == ArmPosition.kSHOOT_LOW){
       armAngle = 90 - (30 * dir);
       wristAngle = 180 + (15 * dir);
-      topFingerAngle = 45;
-      bottomFingerAngle = 135;
+      topFingerAngle = 180;
+      bottomFingerAngle = 180;
     } //if we want to aim for the second level rocket goal
     else if(position == ArmPosition.kSHOOT_MID){
       armAngle = 90 - (30 * dir);
       wristAngle = 180 + (15 * dir);
-      topFingerAngle = 45;
-      bottomFingerAngle = 135;
+      topFingerAngle = 180;
+      bottomFingerAngle = 180;
     } //if we want to aim for the cargo ship goal
     else if(position == ArmPosition.kSHOOT_CARGO){
       armAngle = 90 + (66 * dir);
       wristAngle = 180 + (86 * dir);
-      topFingerAngle = 45;
-      bottomFingerAngle = 135;
+      topFingerAngle = 180;
+      bottomFingerAngle = 180;
     } //position we use at the start of the game
     else if(position == ArmPosition.kDEFAULT){
       armAngle = 5;
       wristAngle = 0;
-      topFingerAngle = 45;
-      bottomFingerAngle = 135;
+      topFingerAngle = 180;
+      bottomFingerAngle = 180;
     }
     else if(position == ArmPosition.kHOLDING){
       armAngle = 90 + (10 * dir);

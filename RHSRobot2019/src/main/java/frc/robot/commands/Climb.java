@@ -8,27 +8,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import frc.robot.RobotMap;
+import frc.robot.RobotMap.Joint;
+import frc.robot.commands.PID.DrivePolarEncoders;
+import frc.robot.commands.PID.JointToAngle;
+import frc.robot.commands.arm.IntakeBall;
 
 public class Climb extends CommandGroup {
   /**
    * Add your docs here.
    */
   public Climb() {
-    // Add Commands here:
-    // e.g. addSequential(new Command1());
-    // addSequential(new Command2());
-    // these will run in order.
-
-    // To run multiple commands at the same time,
-    // use addParallel()
-    // e.g. addParallel(new Command1());
-    // addSequential(new Command2());
-    // Command1 and Command2 will run in parallel.
-
-    // A command group will require all of the subsystems that each member
-    // would require.
-    // e.g. if Command1 requires chassis, and Command2 requires arm,
-    // a CommandGroup containing them would require both the chassis and the
-    // arm.
+    addSequential(new JointToAngle(Joint.kINTAKE, 95, 2));
+    addParallel(new IntakeBall(1));
+    addParallel(new DrivePolarEncoders(0, 90, 3));
+    addSequential(new Lift());
+    addParallel(new JointToAngle(Joint.kINTAKE, 0, RobotMap.climberTimeout));
+    addParallel(new IntakeBall(1));
   }
 }

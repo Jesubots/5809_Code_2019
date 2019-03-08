@@ -9,12 +9,15 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.Joint;
@@ -28,8 +31,8 @@ public class ArmAssembly extends Subsystem {
   public VictorSPX topFinger_motor = new VictorSPX(RobotMap.ArmAssemblyMap.topFinger_motor_port);
   public VictorSPX bottomFinger_motor = new VictorSPX(RobotMap.ArmAssemblyMap.bottomFinger_motor_port);
   public WPI_TalonSRX wrist_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.wrist_motor_port);
-  public WPI_TalonSRX armMaster_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.armMaster_motor_port);
-  public WPI_TalonSRX armFollower_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.armFollower_motor_port);
+  public WPI_TalonSRX armFront_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.armFront_motor_port);
+  public WPI_TalonSRX armBack_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.armBack_motor_port);
   public WPI_TalonSRX leftIntakeEnd_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.leftIntakeEnd_motor_port);
   public WPI_TalonSRX leftIntakeArm_motor = new WPI_TalonSRX(RobotMap.ArmAssemblyMap.leftIntakeArm_motor_port);
   public VictorSPX rightIntakeEnd_motor = new VictorSPX(RobotMap.ArmAssemblyMap.rightIntakeEnd_motor_port);
@@ -37,8 +40,8 @@ public class ArmAssembly extends Subsystem {
 
   public Potentiometer topFinger_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.topFinger_pot_port, 3600, -2448);
   public Potentiometer bottomFinger_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.bottomFinger_pot_port, 3600, -2190);
-  public Potentiometer leftIntake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.leftIntake_pot_port, 3600, -291);
-  public Potentiometer rightIntake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.rightIntake_pot_port, 3600, 0);
+  public Potentiometer leftIntake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.leftIntake_pot_port, 3600, -285);
+  public Potentiometer rightIntake_pot = new AnalogPotentiometer(RobotMap.ArmAssemblyMap.rightIntake_pot_port, 3600, -556);
 
   private ArmPosition armPosition = ArmPosition.kDEFAULT;
   public PotPID frontFingerPID = new PotPID();
@@ -47,8 +50,10 @@ public class ArmAssembly extends Subsystem {
   public EncoderPID armPID = new EncoderPID();
   public EncoderPID wristPID = new EncoderPID();
 
+  public DigitalInput limitSwitch = new DigitalInput(RobotMap.limitSwitch_port);
+  
   public ArmAssembly(){
-    armFollower_motor.follow(armMaster_motor);
+    
   }
 
   @Override
@@ -64,7 +69,17 @@ public class ArmAssembly extends Subsystem {
     armPosition = position;
   }
 
-  public void StartPotPID(double angle, Joint joint){
+  public void setArmEncoder(double angle){
+    armFront_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    armFront_motor.setSelectedSensorPosition((int)(angle/(360f/4096f)));
+  }
+
+  public void setWristEncoder(double angle){
+    wrist_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    wrist_motor.setSelectedSensorPosition((int)(angle/(360f/4096f)));
+  }
+
+  public void StartJointPID(double angle, Joint joint){
     if(joint == Joint.kARM){
       armPID.setJoint(joint);
       armPID.setSetpoint(angle);
@@ -89,8 +104,9 @@ public class ArmAssembly extends Subsystem {
     
   }
 
-  public void StopPotPID(Joint joint){
+  public void StopJointPID(Joint joint){
     if(joint == Joint.kARM){
+      Robot.pneumatics.brakeOn();
       armPID.disable();
     } else if(joint == Joint.kBOTTOM_FINGER){
       backFingerPID.disable();
@@ -108,31 +124,33 @@ public class ArmAssembly extends Subsystem {
   }
 
   public void moveJoint(WPI_TalonSRX talon, double output){
-    talon.set(output);
+    talon.set(ControlMode.PercentOutput, output);
   }
 
   public double getArmAngle(){
     double angle = 0.0;
-    armMaster_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    double encRaw = armMaster_motor.getSelectedSensorPosition();
-    angle = encRaw*(360/4096);
-    angle += 30.96;
+    armFront_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    double encRaw = armFront_motor.getSelectedSensorPosition();
+    angle = ((double)encRaw)*(360f/4096f);
     return angle;
   }
 
   public double getWristAngle(){
     double angle = 0.0;
     wrist_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    double encRaw = armMaster_motor.getSelectedSensorPosition();
-    angle = encRaw*(360/4096);
+    double encRaw = armFront_motor.getSelectedSensorPosition();
+    angle = ((double)encRaw)*(360f/4096f);
+    if(angle < 0){
+      angle = 0;
+    }
     return angle;
   }
 
   public void resetJointEncoders(){
     wrist_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     wrist_motor.setSelectedSensorPosition(0);
-    armMaster_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    armMaster_motor.setSelectedSensorPosition(0);
+    armFront_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    armFront_motor.setSelectedSensorPosition(0);
 
   }
   
@@ -140,7 +158,7 @@ public class ArmAssembly extends Subsystem {
     if(joint == Joint.kARM){
       return getArmAngle();
     } else if(joint == Joint.kINTAKE){
-      return ((rightIntake_pot.get()));
+      return ((rightIntake_pot.get() - leftIntake_pot.get()) / 2);
     } else if(joint == Joint.kTOP_FINGER){
       return topFinger_pot.get();
     } else if(joint == Joint.kBOTTOM_FINGER){
@@ -156,7 +174,7 @@ public class ArmAssembly extends Subsystem {
   private void cancelMotors(Joint joint){
     //all this does is turn off whichever motor is being used by the PID
     if(joint == Joint.kARM){
-      moveJoint(armMaster_motor, 0);
+      moveJoint(armFront_motor, 0);
     } else if(joint == Joint.kINTAKE){
       moveJoint(rightIntakeArm_motor, 0);
     } else if(joint == Joint.kTOP_FINGER){

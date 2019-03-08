@@ -80,6 +80,5 @@ public class PositionArm extends CommandGroup {
       addParallel(new JointToAngle(Joint.kWRIST, wristAngle, 2));
       addParallel(new JointToAngle(Joint.kTOP_FINGER, topFingerAngle, 2));
       addParallel(new JointToAngle(Joint.kBOTTOM_FINGER, bottomFingerAngle, 2));
-      addSequential(new Brake());
   }
 }

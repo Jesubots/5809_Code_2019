@@ -8,13 +8,17 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.Joint;
 import frc.robot.commands.DriveMecanum;
+import frc.robot.commands.Auto.DriveOffHab;
+import frc.robot.commands.arm.routines.PositionArm;
 import frc.robot.subsystems.ArmAssembly;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
@@ -28,11 +32,15 @@ public class Robot extends TimedRobot {
   public static ArmAssembly armAssembly = new ArmAssembly();
   public static Pneumatics pneumatics = new Pneumatics();
   public static Climber climber = new Climber();
+  public Compressor compressor = new Compressor();
+
   public static double visionHorizontalOffset = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
   public static double visionVerticalOffset = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  SendableChooser<Command> testChooser = new SendableChooser<>();
 
   //runs when robot is initialized
   @Override
@@ -42,23 +50,21 @@ public class Robot extends TimedRobot {
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
     SmartDashboard.putBoolean("Zero Arm/Wrist Encoders", false);
-    SmartDashboard.putBoolean("Brake Solenoid", false);
-    SmartDashboard.putBoolean("Punch Solenoids", false);
+    m_chooser.addOption("Drive Off Hab", new DriveOffHab());
+    m_chooser.setDefaultOption("Drive Off Hab", new DriveOffHab());
+    compressor.setClosedLoopControl(true);
+    SmartDashboard.putNumber("Intake Pots", Robot.armAssembly.getPotAngle(Joint.kINTAKE));
+    //SmartDashboard.put
+    
+    SmartDashboard.putData("Test mode", testChooser);
+
   }
 
   //runs periodically while active
   @Override
   public void robotPeriodic() {
-    if(SmartDashboard.getBoolean("Punch Solenoids", false)){
-      Robot.pneumatics.punchOn();
-    } else {
-      Robot.pneumatics.punchOff();
-    }
-    if(SmartDashboard.getBoolean("Brake Solenoid", false)){
-      Robot.pneumatics.brakeOn();
-    } else {
-      Robot.pneumatics.brakeOff();
-    }
+    SmartDashboard.putNumber("Left Intake", Robot.armAssembly.leftIntake_pot.get());
+    SmartDashboard.putNumber("Right Intake", Robot.armAssembly.rightIntake_pot.get());
   }
 
   //runs when robot is disabled
@@ -75,6 +81,8 @@ public class Robot extends TimedRobot {
   //runs when auto starts, not sure if needed because sandstorm
   @Override
   public void autonomousInit() {
+    Robot.armAssembly.setArmEncoder(90);
+    Robot.armAssembly.setWristEncoder(90);
     m_autonomousCommand = m_chooser.getSelected();
 
     /*
@@ -100,6 +108,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     //stop auto
+    Robot.armAssembly.setArmEncoder(90);
+    Robot.armAssembly.setWristEncoder(90);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -109,14 +119,12 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    System.out.print("top finger = " + Robot.armAssembly.getPotAngle(Joint.kTOP_FINGER) + " ");
-    System.out.println("bottom finger = " + Robot.armAssembly.getPotAngle(Joint.kBOTTOM_FINGER));
-    System.out.println("left intake = " + Robot.armAssembly.getPotAngle(Joint.kINTAKE));
   }
 
   //runs periodically during test mode
   @Override
   public void testPeriodic() {
+    System.out.println("intake pots = " + Robot.armAssembly.getPotAngle(Joint.kINTAKE));
   }
 
   public static double getHorizontalOffset(){

@@ -37,7 +37,7 @@ public class JointToAngle extends Command {
 		setTimeout(timeout);
 
     //initialize PID with angle and correct joint
-    Robot.armAssembly.StartPotPID(angle, joint);
+    Robot.armAssembly.StartJointPID(angle, joint);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -63,7 +63,7 @@ public class JointToAngle extends Command {
   @Override
   protected void end() {
     //stop the motor and PID when the command is done
-    Robot.armAssembly.StopPotPID(joint);
+    Robot.armAssembly.StopJointPID(joint);
   }
 
   // Called when another command which requires one or more of the same
@@ -71,6 +71,6 @@ public class JointToAngle extends Command {
   @Override
   protected void interrupted() {
     //stop the motor and PID when the command is interrupted
-    Robot.armAssembly.StopPotPID(joint);
+    Robot.armAssembly.StopJointPID(joint);
   }
 }

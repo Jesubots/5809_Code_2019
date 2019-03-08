@@ -22,7 +22,8 @@ public class FlipArm extends Command {
   @Override
   protected void initialize() {
     setTimeout(3);
-    Robot.armAssembly.StartPotPID(90 + (-OI.getArmDir() + Math.abs(90 - Robot.armAssembly.getArmAngle())), Joint.kARM);
+    Robot.pneumatics.brakeOff();
+    Robot.armAssembly.StartJointPID(90 + (-OI.getArmDir() + Math.abs(90 - Robot.armAssembly.getArmAngle())), Joint.kARM);
     OI.setArmDir(OI.getArmDir() * -1);
   }
 
@@ -40,11 +41,13 @@ public class FlipArm extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.pneumatics.brakeOn();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.pneumatics.brakeOn();
   }
 }

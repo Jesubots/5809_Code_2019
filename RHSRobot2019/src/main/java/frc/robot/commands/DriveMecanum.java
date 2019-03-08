@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap.Joint;
+import frc.robot.Robot;
 
 public class DriveMecanum extends Command {
   private double xInput; //stick x axis
@@ -51,6 +52,9 @@ public class DriveMecanum extends Command {
     if(Math.abs(tInput) < .1){
       tInput = 0;
     }
+
+    //System.out.print("arm angle = " +  Robot.armAssembly.getArmAngle());
+    //System.out.println("wrist angle = " +  Robot.armAssembly.getWristAngle());
     
     Robot.driveTrain.mecanum.driveCartesian(-xInput * OI.getArmDir(), yInput * OI.getArmDir(), -tInput); //-Robot.driveTrain.ahrs.getYaw());
   }

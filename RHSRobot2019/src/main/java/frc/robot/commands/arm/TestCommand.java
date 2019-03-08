@@ -7,10 +7,13 @@
 
 package frc.robot.commands.arm;
 
-import edu.wpi.first.wpilibj.command.Command;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
-public class MoveWrist extends Command {
-  public MoveWrist() {
+import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
+
+public class TestCommand extends Command {
+  public TestCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -18,27 +21,31 @@ public class MoveWrist extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    setTimeout(1);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.climber.descend();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return isTimedOut();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.climber.stopLift();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-  }
+    Robot.climber.stopLift();
+    }
 }

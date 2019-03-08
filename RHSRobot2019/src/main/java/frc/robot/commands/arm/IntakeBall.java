@@ -14,26 +14,28 @@ import frc.robot.Robot;
 
 public class IntakeBall extends Command {
   private double input;
+  private double timeout;
 
   public IntakeBall() {
     requires(Robot.armAssembly);
   }
 
-  public IntakeBall(double input){
+  public IntakeBall(double input, double timeout){
     this.input = input;
+    this.timeout = timeout;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    setTimeout(5);
+    setTimeout(timeout);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.armAssembly.leftIntakeEnd_motor.set(ControlMode.Current, input);
-    Robot.armAssembly.rightIntakeEnd_motor.set(ControlMode.Current, input);
+    Robot.armAssembly.leftIntakeEnd_motor.set(ControlMode.PercentOutput, input);
+    Robot.armAssembly.rightIntakeEnd_motor.set(ControlMode.PercentOutput, input);
   }
 
   // Make this return true when this Command no longer needs to run execute()

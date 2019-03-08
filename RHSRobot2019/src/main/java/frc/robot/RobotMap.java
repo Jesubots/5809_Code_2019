@@ -14,10 +14,10 @@ public class RobotMap {
 	public static final double ARM_WRIST_RATIO = 1f;
 	public static final double MAXIMUM_INTAKE_ANGLE = 90f;
 	public static final double climberTimeout = 1f;
-	//climber motors
+	//climber
 	public static final int leftClimber_motor_port = 1;
 	public static final int rightClimber_motor_port = 6;
-	//solenoid ports
+	//solenoid
 	public static final int leftPunchForward_sol_port = 5;
 	public static final int rightPunchForward_sol_port = 3;
 	public static final int brakeForward_sol_port = 1;
@@ -29,11 +29,14 @@ public class RobotMap {
 	public static final int frontLeft_port = 4;
 	public static final int backRight_port = 7;
 	public static final int frontRight_port = 2;
-	//sensors and stuff
+	//AN
 	public static final int rightPistonMag_port = 0;
 	public static final int leftPistonMag_port = 1;
-	public static final int ultrasonicOut_port = 2;
-	public static final int ultrasonicIn_port = 3;
+	//navx runs AN ports 4-7, referred to as 0-3
+	public static final int frontUltrasonic_port = 4;
+	public static final int backUltrasonic_port = 5;
+	//DIO
+	public static final int limitSwitch_port = 3;
 
 
 	//PID values for encoders on drive train
@@ -56,9 +59,9 @@ public class RobotMap {
 
 	//PID values for Encoders on joints
 	public class EncoderJointPIDMap { 
-		public static final double kP = 0.;
-		public static final double kI = 0.0026;
-		public static final double kD = 0.25;
+		public static final double kP = 0.01;
+		public static final double kI = 0.001;
+		public static final double kD = 0.5;
 		public static final double kF = 0.1;
 		public static final double kToleranceDegrees = 1.0f;
 	}
@@ -84,8 +87,8 @@ public class RobotMap {
 		public static final int topFinger_motor_port = 7;
 		public static final int bottomFinger_motor_port = 3;
 		public static final int wrist_motor_port = 6;
-		public static final int armMaster_motor_port = 1;
-		public static final int armFollower_motor_port = 3;
+		public static final int armFront_motor_port = 1;
+		public static final int armBack_motor_port = 3;
 		public static final int leftIntakeEnd_motor_port = 5;
 		public static final int leftIntakeArm_motor_port = 2;
 		public static final int rightIntakeEnd_motor_port = 0;

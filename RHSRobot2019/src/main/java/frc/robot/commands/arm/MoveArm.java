@@ -30,14 +30,19 @@ public class MoveArm extends Command {
   @Override
   protected void initialize() {
     setTimeout(1);
-    Robot.armAssembly.StartPotPID(90 + Robot.armAssembly.getArmAngle(), Joint.kWRIST);
+    Robot.pneumatics.brakeOff();
+    Robot.armAssembly.StartJointPID(90 + Robot.armAssembly.getArmAngle(), Joint.kWRIST);
     System.out.println("Move Arm");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.armAssembly.armMaster_motor.set(ControlMode.Current, input * OI.getArmDir());
+    System.out.println("Arm enc = " + Robot.armAssembly.getArmAngle());
+    System.out.println("Wrist enc = " + Robot.armAssembly.getWristAngle());
+    Robot.armAssembly.armBack_motor.set(ControlMode.PercentOutput, -input * OI.getArmDir());
+    Robot.armAssembly.armFront_motor.set(ControlMode.PercentOutput, input * OI.getArmDir());
+    
     //continuously sets the PID target to the correct angle
     Robot.armAssembly.wristPID.setSetpoint(90 + Robot.armAssembly.getArmAngle());
   }
@@ -51,13 +56,19 @@ public class MoveArm extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.armAssembly.StopPotPID(Joint.kWRIST);
+    Robot.pneumatics.brakeOn();
+    Robot.armAssembly.StopJointPID(Joint.kWRIST);
+    Robot.armAssembly.armBack_motor.set(ControlMode.PercentOutput, 0);
+    Robot.armAssembly.armFront_motor.set(ControlMode.PercentOutput, 0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.armAssembly.StopPotPID(Joint.kWRIST);
+    Robot.pneumatics.brakeOn();
+    Robot.armAssembly.StopJointPID(Joint.kWRIST);
+    Robot.armAssembly.armBack_motor.set(ControlMode.PercentOutput, 0);
+    Robot.armAssembly.armFront_motor.set(ControlMode.PercentOutput, 0);
   }
 }

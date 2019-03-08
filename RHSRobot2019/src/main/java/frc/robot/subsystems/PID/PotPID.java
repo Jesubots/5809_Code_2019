@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.PID;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -37,7 +39,9 @@ public class PotPID extends PIDSubsystem {
 
   @Override
   protected double returnPIDInput() {
+    
     if(joint == Joint.kINTAKE){
+      
       return ((Robot.armAssembly.leftIntake_pot.get() + Robot.armAssembly.rightIntake_pot.get()) / 2);
     } else if(joint == Joint.kTOP_FINGER){
       return Robot.armAssembly.topFinger_pot.get();
@@ -53,8 +57,8 @@ public class PotPID extends PIDSubsystem {
   protected void usePIDOutput(double output) {
     output *= .5;
     if(joint == Joint.kINTAKE){
-      Robot.armAssembly.moveJoint(Robot.armAssembly.rightIntakeArm_motor, output);
-      Robot.armAssembly.moveJoint(Robot.armAssembly.leftIntakeArm_motor, output);
+      Robot.armAssembly.rightIntakeArm_motor.set(ControlMode.PercentOutput, -output);
+      Robot.armAssembly.leftIntakeArm_motor.set(ControlMode.PercentOutput, -output);
     } else if(joint == Joint.kTOP_FINGER){
       Robot.armAssembly.moveJoint(Robot.armAssembly.topFinger_motor, output);
     } else if(joint == Joint.kBOTTOM_FINGER){
@@ -65,6 +69,7 @@ public class PotPID extends PIDSubsystem {
   }
 
   public void setJoint(Joint inputJoint){
+    System.out.println("JOINT FOR PID IS NOW " + inputJoint);
     joint = inputJoint;
   }
 }

@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.PID;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -37,6 +39,7 @@ public class EncoderPID extends PIDSubsystem {
 
   @Override
   protected double returnPIDInput() {
+    System.out.println("pidjoint = " + joint);
     if(joint == Joint.kARM){
       return Robot.armAssembly.getArmAngle();
     }else if(joint == Joint.kWRIST){
@@ -50,8 +53,12 @@ public class EncoderPID extends PIDSubsystem {
   @Override
   protected void usePIDOutput(double output) {
     output *= .5;
+    System.out.println(joint + " is reaching " + getSetpoint() + " degrees.");
     if(joint == Joint.kARM){
-      Robot.armAssembly.moveJoint(Robot.armAssembly.armMaster_motor, output);
+      System.out.println("run arm at " + output);
+      Robot.pneumatics.brakeOff();
+      Robot.armAssembly.armBack_motor.set(ControlMode.PercentOutput, output);
+      Robot.armAssembly.armFront_motor.set(ControlMode.PercentOutput, -output);
     } else if(joint == Joint.kWRIST){
       Robot.armAssembly.moveJoint(Robot.armAssembly.wrist_motor, output);
     } else {

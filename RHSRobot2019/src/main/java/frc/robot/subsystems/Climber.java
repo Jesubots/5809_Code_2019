@@ -27,17 +27,17 @@ public class Climber extends Subsystem {
   }
 
   public void lift(){
-    rightClimber_motor.set(ControlMode.Current, 1);
-    leftClimber_motor.set(ControlMode.Current, 1);
+    rightClimber_motor.set(ControlMode.PercentOutput, -1);
+    leftClimber_motor.set(ControlMode.PercentOutput, 1);
   }
 
   public void descend(){
-    rightClimber_motor.set(ControlMode.Current, -1);
-    leftClimber_motor.set(ControlMode.Current, -1);
+    rightClimber_motor.set(ControlMode.PercentOutput, 1);
+    leftClimber_motor.set(ControlMode.PercentOutput, -1);
   }
 
   public void stopLift(){
-    rightClimber_motor.set(ControlMode.Current, 0);
-    leftClimber_motor.set(ControlMode.Current, 0);
+    rightClimber_motor.set(ControlMode.PercentOutput, 0);
+    leftClimber_motor.set(ControlMode.PercentOutput, 0);
   }
 }

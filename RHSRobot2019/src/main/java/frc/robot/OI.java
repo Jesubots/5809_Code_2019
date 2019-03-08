@@ -13,10 +13,14 @@ import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.BallTarget;
 import frc.robot.RobotMap.Joint;
 import frc.robot.commands.Climb;
+import frc.robot.commands.Lift;
 import frc.robot.commands.PID.JointToAngle;
+import frc.robot.commands.arm.Fire;
 import frc.robot.commands.arm.FlipArm;
 import frc.robot.commands.arm.IntakeBall;
+import frc.robot.commands.arm.ManualShot;
 import frc.robot.commands.arm.MoveArm;
+import frc.robot.commands.arm.TestCommand;
 import frc.robot.commands.arm.routines.PickupBallGround;
 import frc.robot.commands.arm.routines.PickupHatch;
 import frc.robot.commands.arm.routines.PlaceHatch;
@@ -31,19 +35,27 @@ public class OI {
   //arm
   private static double wristAngle = 0;
   private static int armDir = 1;
-  //buttons, denoted by _b
+  //buttons
+  //Pickup
   public static JoystickButton hatchGroundPickup_b = new JoystickButton(buttonPanel, 10);
-  public static JoystickButton hatchWallPickup_b = new JoystickButton(buttonPanel, 1);
-  public static JoystickButton hatchPlace_b = new JoystickButton(buttonPanel, 2);
-  public static JoystickButton ballGroundPickup_b = new JoystickButton(buttonPanel, 3);
-  public static JoystickButton shootRocketLow_b = new JoystickButton(buttonPanel, 4);
-  public static JoystickButton shootCargo_b = new JoystickButton(buttonPanel, 5);
-  public static JoystickButton shootRocketMid_b = new JoystickButton(buttonPanel, 6);
-  public static JoystickButton flipArm_b = new JoystickButton(buttonPanel, 9);
-  public static JoystickButton climb_b = new JoystickButton(driverStick, 5);
+  public static JoystickButton hatchWallPickup_b = new JoystickButton(buttonPanel, 5);
+  public static JoystickButton hatchPlace_b = new JoystickButton(buttonPanel, 6);
+  public static JoystickButton ballGroundPickup_b = new JoystickButton(buttonPanel, 14);
+  //Shooting
+  public static JoystickButton aimRocketLow_b = new JoystickButton(buttonPanel, 10);
+  public static JoystickButton aimCargo_b = new JoystickButton(buttonPanel, 8);
+  public static JoystickButton aimRocketMid_b = new JoystickButton(buttonPanel, 12);
+  public static JoystickButton shootRocketLow_b = new JoystickButton(buttonPanel, 9);
+  public static JoystickButton shootCargo_b = new JoystickButton(buttonPanel, 7);
+  public static JoystickButton shootRocketMid_b = new JoystickButton(buttonPanel, 11);
+  //Other
+  public static JoystickButton flipArm_b = new JoystickButton(driverStick, 9);
+  public static JoystickButton climb_b = new JoystickButton(driverStick, 7);
   public static JoystickButton intakePosition_b = new JoystickButton(driverStick, 1);
-  public static JoystickButton armUp_b = new JoystickButton(buttonPanel, 7);
-  public static JoystickButton armDown_b = new JoystickButton(buttonPanel, 8);
+  public static JoystickButton armUp_b = new JoystickButton(buttonPanel, 3);
+  public static JoystickButton armDown_b = new JoystickButton(buttonPanel, 2);
+  public static JoystickButton manualShoot_b = new JoystickButton(driverStick, 5);
+  public static JoystickButton test_b = new JoystickButton(buttonPanel, 13);
 
   public OI(){
     initButtons();
@@ -64,45 +76,50 @@ public class OI {
     OI.flipArm_b.whenPressed(new FlipArm()); //SW
     OI.flipArm_b.whenPressed(new JointToAngle(Joint.kARM, Robot.armAssembly.getArmAngle() * -1, 2)); //SW
 
+    OI.manualShoot_b.whenPressed(new ManualShot());
+
     if(Robot.armAssembly.getArmPosition() == ArmPosition.kBALL_PICKUP){
-      OI.ballGroundPickup_b.whenPressed(new PickupBallGround()); //NW
+      OI.ballGroundPickup_b.whenPressed(new PickupBallGround()); //SW
     } else {
-      OI.ballGroundPickup_b.whenPressed(new PositionArm(ArmPosition.kBALL_PICKUP));
-      OI.ballGroundPickup_b.whenPressed(new IntakeBall());
+      OI.ballGroundPickup_b.whenPressed(new PositionArm(ArmPosition.kBALL_PICKUP)); //SW
+      OI.ballGroundPickup_b.whenPressed(new IntakeBall()); //SW
     }
 
-    OI.intakePosition_b.whenPressed(new JointToAngle(Joint.kINTAKE, RobotMap.MAXIMUM_INTAKE_ANGLE, 2)); //SW
-
+    //OI.intakePosition_b.whenPressed(new JointToAngle(Joint.kINTAKE, RobotMap.MAXIMUM_INTAKE_ANGLE, 2)); //SW
+    OI.intakePosition_b.whileHeld(new TestCommand());
 
     if(Robot.armAssembly.getArmPosition() == ArmPosition.kHATCH)
-      OI.hatchPlace_b.whenPressed(new PickupHatch()); //NW
+      OI.hatchPlace_b.whenPressed(new PickupHatch()); //SW
     else
-      OI.hatchPlace_b.whenPressed(new PositionArm(ArmPosition.kHATCH));
+      OI.hatchPlace_b.whenPressed(new Fire(false)); //SW
 
     if(Robot.armAssembly.getArmPosition() == ArmPosition.kHATCH)
-      OI.hatchPlace_b.whenPressed(new PlaceHatch()); //NW
+      OI.hatchPlace_b.whenPressed(new PlaceHatch()); //SW
     else
       OI.hatchPlace_b.whenPressed(new PositionArm(ArmPosition.kHATCH));
 
     if(Robot.armAssembly.getArmPosition() == ArmPosition.kSHOOT_LOW)
-      OI.shootRocketLow_b.whenPressed(new ShootBall(BallTarget.kLOW)); //NW
+      OI.shootRocketLow_b.whenPressed(new Fire(true));//ShootBall(BallTarget.kLOW)); //SW
     else
-      OI.shootRocketLow_b.whenPressed(new PositionArm(ArmPosition.kSHOOT_LOW));
+      OI.shootRocketLow_b.whenPressed(new PositionArm(ArmPosition.kSHOOT_LOW)); //SW
 
     if(Robot.armAssembly.getArmPosition() == ArmPosition.kSHOOT_MID)
-      OI.shootRocketMid_b.whenPressed(new ShootBall(BallTarget.kMID)); //NW
+      OI.shootRocketMid_b.whenPressed(new ShootBall(BallTarget.kMID)); //SW
     else
-      OI.shootRocketMid_b.whenPressed(new PositionArm(ArmPosition.kSHOOT_MID)); //NW
+      OI.shootRocketMid_b.whenPressed(new PositionArm(ArmPosition.kSHOOT_MID)); //SW
 
     if(Robot.armAssembly.getArmPosition() == ArmPosition.kSHOOT_CARGO)
-      OI.shootRocketMid_b.whenPressed(new ShootBall(BallTarget.kCARGO)); //NW
+      OI.shootRocketMid_b.whenPressed(new ShootBall(BallTarget.kCARGO)); //SW
     else
-      OI.shootRocketMid_b.whenPressed(new PositionArm(ArmPosition.kSHOOT_CARGO)); //NW
+      OI.shootRocketMid_b.whenPressed(new PositionArm(ArmPosition.kSHOOT_CARGO)); //SW
 
-    OI.climb_b.whenPressed(new Climb()); //NW
+    OI.climb_b.whenPressed(new Climb()); //SW
 
-    OI.armDown_b.whileHeld(new MoveArm(-.25));
-    OI.armDown_b.whileHeld(new MoveArm(.25));
+    OI.armDown_b.whileHeld(new MoveArm(-.25)); //SW
+    OI.armUp_b.whileHeld(new MoveArm(.25)); //SW
+
+    OI.test_b.whenPressed(new JointToAngle(Joint.kINTAKE, 90, 1));
+
   }
 
   public static int getArmDir(){

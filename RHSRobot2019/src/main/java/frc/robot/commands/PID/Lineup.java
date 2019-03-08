@@ -26,7 +26,7 @@ public class Lineup extends Command {
   * move the correct distance in the correct direction
   */
   public Lineup(double driveTimeout){
-    //converts inches to encoder counts
+    
     this.driveTimeout = driveTimeout;
   }
 
@@ -49,7 +49,7 @@ public class Lineup extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return (/* LIMELIGHT ANGLE */0 < 10 || isTimedOut());
+    return (Robot.getVerticalOffset() < 10 || isTimedOut());
   }
 
   // Called once after isFinished returns true

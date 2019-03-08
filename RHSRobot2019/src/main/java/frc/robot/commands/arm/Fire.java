@@ -7,11 +7,14 @@
 
 package frc.robot.commands.arm;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
 public class Fire extends Command {
   private boolean projectile = true;
+  private boolean finished = false;
+  protected boolean mag = true;
 
   public Fire() {
     // Use requires() here to declare subsystem dependencies
@@ -28,35 +31,42 @@ public class Fire extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    setTimeout(2);
+    if(!projectile){
+      Robot.pneumatics.punchOn();
+      Timer.delay(.05);
+      Robot.pneumatics.punchOff();
+      Timer.delay(.075);
+      Robot.pneumatics.punchOn();
+      Timer.delay(1);
+      Robot.pneumatics.punchOff();
+    } else {
+      Robot.pneumatics.punchOn();
+      Timer.delay(1);
+      Robot.pneumatics.punchOff();
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(projectile){
-
-    } else {
-      if(Robot.pneumatics.leftPistonMag.get()){
-
-      }
-    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isTimedOut();
+    return true;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.pneumatics.punchOff();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    
   }
 }

@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -38,7 +39,13 @@ public class Pneumatics extends Subsystem {
     rightPunchForward_sol.set(false);
     leftPunchReverse_sol.set(true);
     rightPunchReverse_sol.set(true);
-    
+  }
+
+  public void disengagePistons(){
+    leftPunchForward_sol.set(false);
+    rightPunchForward_sol.set(false);
+    leftPunchReverse_sol.set(false);
+    rightPunchReverse_sol.set(false);
   }
 
   public void brakeOn(){

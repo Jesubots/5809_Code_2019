@@ -14,6 +14,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.Ultrasonic.Unit;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -32,7 +33,8 @@ public class DriveTrain extends Subsystem {
   public WPI_TalonSRX backLeft_motor = new WPI_TalonSRX(RobotMap.backLeft_port);
   public WPI_TalonSRX backRight_motor = new WPI_TalonSRX(RobotMap.backRight_port);
   public AHRS ahrs = new AHRS(Port.kMXP);
-  public Ultrasonic us = new Ultrasonic(RobotMap.ultrasonicOut_port, RobotMap.ultrasonicIn_port, Unit.kInches);
+  public AnalogInput backUltrasonic = new AnalogInput(RobotMap.backUltrasonic_port);
+  public AnalogInput frontUltrasonic = new AnalogInput(RobotMap.frontUltrasonic_port);
   Joystick stick = OI.driverStick;
 
   public MecanumDrive mecanum = new MecanumDrive(frontLeft_motor, backLeft_motor, frontRight_motor, backRight_motor);
@@ -120,6 +122,14 @@ public class DriveTrain extends Subsystem {
 
   public void StopPolarYPID() {
     encYPID.disable();
+  }
+
+  public double getDistance(){
+    if(OI.getArmDir() == 1){
+      return frontUltrasonic.getVoltage();
+    } else {
+      return backUltrasonic.getVoltage();
+    }
   }
 
   //encoder position methods

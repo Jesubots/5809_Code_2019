@@ -5,25 +5,19 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.RobotMap;
 import frc.robot.RobotMap.Joint;
-import frc.robot.commands.PID.DrivePolarEncoders;
 import frc.robot.commands.PID.JointToAngle;
-import frc.robot.commands.arm.IntakeBall;
 
-public class Climb extends CommandGroup {
+public class ManualShot extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public Climb() {
-    addSequential(new JointToAngle(Joint.kINTAKE, 95, 2));
-    addParallel(new IntakeBall(1, 5));
-    addParallel(new DrivePolarEncoders(0, 90, 3));
-    addSequential(new Lift());
-    addParallel(new JointToAngle(Joint.kINTAKE, 0, RobotMap.climberTimeout));
-    addParallel(new IntakeBall(1, 5));
+  public ManualShot() {
+    addSequential(new JointToAngle(Joint.kBOTTOM_FINGER, 145, .5));
+    addParallel(new JointToAngle(Joint.kTOP_FINGER, 145, .5));
+    addSequential(new Fire(true));
   }
 }

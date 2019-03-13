@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.RobotMap.ArmPosition;
 import frc.robot.commands.PID.DrivePolarEncoders;
 import frc.robot.commands.PID.Lineup;
+import frc.robot.Robot;
 
 public class PickupHatch extends CommandGroup {
   /**
@@ -18,7 +19,7 @@ public class PickupHatch extends CommandGroup {
    */
   public PickupHatch() {
     addSequential(new Lineup(2));
-    addParallel(new PositionArm(ArmPosition.kHATCH));
-    addSequential(new DrivePolarEncoders(0 /*ultrasonic value*/, 90, 2));
+    addParallel(new PositionArm(ArmPosition.HATCH));
+    addSequential(new DrivePolarEncoders(Robot.driveTrain.getDistance(), 90, 2));
   }
 }

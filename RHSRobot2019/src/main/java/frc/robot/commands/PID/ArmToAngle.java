@@ -14,20 +14,19 @@ import frc.robot.Robot;
 import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.Joint;
 
-public class JointToAngle extends Command {
+public class ArmToAngle extends Command {
   //joint is an enum value that tells the PID which motor and pot to use
   private Joint joint;
   private double angle;
   private double timeout;
 
-  public JointToAngle() {
+  public ArmToAngle() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
 
-  public JointToAngle(Joint joint, double angle, double timeout){
+  public ArmToAngle(double angle, double timeout){
     this.angle = angle;
-    this.joint = joint;
     this.timeout = timeout;
   }
 
@@ -56,7 +55,7 @@ public class JointToAngle extends Command {
   @Override
   protected boolean isFinished() {
     //finishes if the angle is within 5 degrees or the command times out
-    return (Math.abs(angle - Robot.armAssembly.getJointAngle(joint)) < 5f) || isTimedOut();
+    return (Math.abs(angle - Robot.armAssembly.getArmAngle()) < 5f) || isTimedOut();
   }
 
   // Called once after isFinished returns true

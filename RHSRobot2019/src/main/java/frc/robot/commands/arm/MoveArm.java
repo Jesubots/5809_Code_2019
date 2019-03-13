@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.Joint;
 
 public class MoveArm extends Command {
@@ -29,22 +30,22 @@ public class MoveArm extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.armAssembly.StopArmPID();
     setTimeout(1);
     Robot.pneumatics.brakeOff();
-    Robot.armAssembly.StartJointPID(90 + Robot.armAssembly.getArmAngle(), Joint.kWRIST);
-    System.out.println("Move Arm");
+    //Robot.armAssembly.StartJointPID(90 + Robot.armAssembly.getArmAngle(), Joint.WRIST);
+    Robot.armAssembly.setArmPosition(ArmPosition.NONE);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    System.out.println("Arm enc = " + Robot.armAssembly.getArmAngle());
-    System.out.println("Wrist enc = " + Robot.armAssembly.getWristAngle());
-    Robot.armAssembly.armBack_motor.set(ControlMode.PercentOutput, -input * OI.getArmDir());
-    Robot.armAssembly.armFront_motor.set(ControlMode.PercentOutput, input * OI.getArmDir());
+    //System.out.println"Arm enc = " + Robot.armAssembly.getArmAngle());
+    //System.out.println("Wrist enc = " + Robot.armAssembly.getWristAngle());
+    Robot.armAssembly.setArmMotors(input);
     
     //continuously sets the PID target to the correct angle
-    Robot.armAssembly.wristPID.setSetpoint(90 + Robot.armAssembly.getArmAngle());
+    //Robot.armAssembly.wristPID.setSetpoint(90 + Robot.armAssembly.getArmAngle());
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -57,7 +58,7 @@ public class MoveArm extends Command {
   @Override
   protected void end() {
     Robot.pneumatics.brakeOn();
-    Robot.armAssembly.StopJointPID(Joint.kWRIST);
+    Robot.armAssembly.StopJointPID(Joint.WRIST);
     Robot.armAssembly.armBack_motor.set(ControlMode.PercentOutput, 0);
     Robot.armAssembly.armFront_motor.set(ControlMode.PercentOutput, 0);
   }
@@ -67,7 +68,7 @@ public class MoveArm extends Command {
   @Override
   protected void interrupted() {
     Robot.pneumatics.brakeOn();
-    Robot.armAssembly.StopJointPID(Joint.kWRIST);
+    Robot.armAssembly.StopJointPID(Joint.WRIST);
     Robot.armAssembly.armBack_motor.set(ControlMode.PercentOutput, 0);
     Robot.armAssembly.armFront_motor.set(ControlMode.PercentOutput, 0);
   }

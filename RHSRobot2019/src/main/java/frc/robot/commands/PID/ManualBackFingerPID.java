@@ -5,51 +5,68 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.arm;
+package frc.robot.commands.PID;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap.Joint;
 
-public class FlipArm extends Command {
-  public FlipArm() {
+public class ManualBackFingerPID extends Command {
+  private double angle;
+  private double output;
+  private double target;
+  private double error;
+  private double timeout;
+  
+  public ManualBackFingerPID() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+  }
+
+  public ManualBackFingerPID(double target, double timeout){
+    this.target = target;
+    this.timeout = timeout;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    setTimeout(3);
-    Robot.pneumatics.brakeOff();
-    Robot.armAssembly.StartJointPID(90 + (-OI.getArmDir() + Math.abs(90 - Robot.armAssembly.getArmAngle())), Joint.ARM);
-    OI.setArmDir(OI.getArmDir() * -1);
+    error = 0.0;
+    setTimeout(timeout);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    angle = Robot.armAssembly.getJointAngle(Joint.BACK_FINGER);
+    //System.out.println"angle front finger = " + angle);
+    error = target - angle;
+    output = error * .01;
+    if(Math.abs(output) > 1f){
+      output = 1f * Math.signum(output);
+    }
+    //System.out.println"output = " + output);
+    Robot.armAssembly.setBackFingerMotor(output);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isTimedOut();
+    return (Math.abs(error) < 5) || isTimedOut();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.pneumatics.brakeOn();
-    Robot.armAssembly.StopJointPID(Joint.ARM);
+    //System.out.println"PID Ended");
+    Robot.armAssembly.setBackFingerMotor(0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.pneumatics.brakeOn();
-    Robot.armAssembly.StopJointPID(Joint.ARM);
+    //System.out.println"PID Interrupted");
+    Robot.armAssembly.setBackFingerMotor(0);
   }
 }

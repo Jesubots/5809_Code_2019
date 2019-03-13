@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -18,6 +19,9 @@ import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.Joint;
 import frc.robot.commands.DriveMecanum;
 import frc.robot.commands.Auto.DriveOffHab;
+import frc.robot.commands.PID.ManualArmPID;
+import frc.robot.commands.PID.ManualWristPID;
+import frc.robot.commands.arm.TestCommand;
 import frc.robot.commands.arm.routines.PositionArm;
 import frc.robot.subsystems.ArmAssembly;
 import frc.robot.subsystems.Climber;
@@ -51,20 +55,34 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto mode", m_chooser);
     SmartDashboard.putBoolean("Zero Arm/Wrist Encoders", false);
     m_chooser.addOption("Drive Off Hab", new DriveOffHab());
-    m_chooser.setDefaultOption("Drive Off Hab", new DriveOffHab());
+    m_chooser.setDefaultOption("NONE", new TestCommand());
     compressor.setClosedLoopControl(true);
-    SmartDashboard.putNumber("Intake Pots", Robot.armAssembly.getPotAngle(Joint.kINTAKE));
-    //SmartDashboard.put
+    SmartDashboard.putNumber("Angle", 0);
     
     SmartDashboard.putData("Test mode", testChooser);
+    testChooser.setDefaultOption("None", new TestCommand());
 
+    CameraServer.getInstance().startAutomaticCapture();
+
+
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("stream").setDouble(1);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setDouble(1);
   }
 
   //runs periodically while active
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Left Intake", Robot.armAssembly.leftIntake_pot.get());
-    SmartDashboard.putNumber("Right Intake", Robot.armAssembly.rightIntake_pot.get());
+    
+    m_chooser.addOption("Arm Angle", new ManualArmPID(SmartDashboard.getNumber("Angle", 90), 2));
+    m_chooser.addOption("Hatch Position", new ManualWristPID(SmartDashboard.getNumber("Angle", 90), 2));
+    m_chooser.addOption("Default Position", new PositionArm(ArmPosition.DEFAULT));
+    m_chooser.addOption("Holding Position", new PositionArm(ArmPosition.HOLDING));
+
+    SmartDashboard.putNumber("BackFinger Angle", Robot.armAssembly.getJointAngle(Joint.BACK_FINGER));
+    SmartDashboard.putNumber("FrontFinger Angle", Robot.armAssembly.getJointAngle(Joint.FRONT_FINGER));
+    SmartDashboard.putData("Arm PID", Robot.armAssembly.armPID.getPIDController());
+
+
   }
 
   //runs when robot is disabled
@@ -101,6 +119,8 @@ public class Robot extends TimedRobot {
   //called periodically during auto
   @Override
   public void autonomousPeriodic() {
+    
+
     Scheduler.getInstance().run();
   }
 
@@ -119,12 +139,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+    SmartDashboard.putNumber("Wrist Speed", Robot.armAssembly.wristMult);
+    SmartDashboard.putNumber("Arm Speed", Robot.armAssembly.armMult);
   }
 
   //runs periodically during test mode
   @Override
   public void testPeriodic() {
-    System.out.println("intake pots = " + Robot.armAssembly.getPotAngle(Joint.kINTAKE));
+    
   }
 
   public static double getHorizontalOffset(){
@@ -133,5 +155,9 @@ public class Robot extends TimedRobot {
 
   public static double getVerticalOffset(){
     return visionVerticalOffset;
+  }
+
+  public static void cleanStack(){
+    Scheduler.getInstance().removeAll();
   }
 }

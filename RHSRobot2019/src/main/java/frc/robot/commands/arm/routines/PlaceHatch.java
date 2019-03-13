@@ -24,7 +24,7 @@ public class PlaceHatch extends CommandGroup {
   public PlaceHatch() {
     addSequential(new PivotTurn(angle, 3));
     addSequential(new Lineup(2));
-    addParallel(new PositionArm(ArmPosition.kHATCH));
+    addParallel(new PositionArm(ArmPosition.HATCH));
     addSequential(new DrivePolarEncoders(distance, 90, 2));
     addSequential(new Fire(false));
   }

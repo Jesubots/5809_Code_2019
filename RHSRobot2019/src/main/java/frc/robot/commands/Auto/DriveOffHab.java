@@ -18,8 +18,7 @@ public class DriveOffHab extends CommandGroup {
    * Add your docs here.
    */
   public DriveOffHab() {
-    addSequential(new PositionArm(ArmPosition.kDEFAULT));
+    addSequential(new PositionArm(ArmPosition.DEFAULT));
     addSequential(new DrivePolarEncoders(90, 36, 3));
-    addSequential(new DriveMecanum());
   }
 }

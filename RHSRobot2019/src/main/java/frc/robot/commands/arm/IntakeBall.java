@@ -34,7 +34,7 @@ public class IntakeBall extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.armAssembly.leftIntakeEnd_motor.set(ControlMode.PercentOutput, input);
+    Robot.armAssembly.leftIntakeEnd_motor.set(ControlMode.PercentOutput, -input);
     Robot.armAssembly.rightIntakeEnd_motor.set(ControlMode.PercentOutput, input);
   }
 

@@ -7,29 +7,33 @@
 
 package frc.robot.commands.arm;
 
-import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
-import frc.robot.Robot;
-import frc.robot.RobotMap.Joint;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
-public class FlipArm extends Command {
-  public FlipArm() {
+import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
+
+public class MoveFingers extends Command {
+  private double input;
+  public MoveFingers() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+  }
+
+  public MoveFingers(double input){
+    this.input = input;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    setTimeout(3);
-    Robot.pneumatics.brakeOff();
-    Robot.armAssembly.StartJointPID(90 + (-OI.getArmDir() + Math.abs(90 - Robot.armAssembly.getArmAngle())), Joint.ARM);
-    OI.setArmDir(OI.getArmDir() * -1);
+    setTimeout(.5);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.armAssembly.frontFinger_motor.set(ControlMode.PercentOutput, input * .25);
+    Robot.armAssembly.backFinger_motor.set(ControlMode.PercentOutput, input * .25);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -41,15 +45,15 @@ public class FlipArm extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.pneumatics.brakeOn();
-    Robot.armAssembly.StopJointPID(Joint.ARM);
+    Robot.armAssembly.frontFinger_motor.set(ControlMode.PercentOutput, 0);
+    Robot.armAssembly.backFinger_motor.set(ControlMode.PercentOutput, 0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.pneumatics.brakeOn();
-    Robot.armAssembly.StopJointPID(Joint.ARM);
+    Robot.armAssembly.frontFinger_motor.set(ControlMode.PercentOutput, 0);
+    Robot.armAssembly.backFinger_motor.set(ControlMode.PercentOutput, 0);
   }
 }

@@ -49,10 +49,10 @@ public class DriveTrain extends Subsystem {
     frontLeft_motor.setNeutralMode(NeutralMode.Brake);
     backRight_motor.setNeutralMode(NeutralMode.Brake);
     backLeft_motor.setNeutralMode(NeutralMode.Brake);
-    frontLeft_motor.setSafetyEnabled(true);
-    frontRight_motor.setSafetyEnabled(true);
-    backLeft_motor.setSafetyEnabled(true);
-    backRight_motor.setSafetyEnabled(true);
+    frontLeft_motor.setSafetyEnabled(false);
+    frontRight_motor.setSafetyEnabled(false);
+    backLeft_motor.setSafetyEnabled(false);
+    backRight_motor.setSafetyEnabled(false);
     
 
     ahrs.zeroYaw();
@@ -85,25 +85,25 @@ public class DriveTrain extends Subsystem {
   }
 
   public void DrivePolarXPID(double distance) {
-    System.out.println("EncoderPID (x) started...");
+    //System.out.println"EncoderPID (x) started...");
     encXPID.setSetpoint(distance);
     encXPID.enable();
   }
 
   public void DrivePolarYPID(double distance) {
-    System.out.println("EncoderPID (y) started...");
+    //System.out.println"EncoderPID (y) started...");
     encYPID.setSetpoint(distance);
     encYPID.enable();
   }
 
   public void StartPivotTurnPID(double angle) {
-    System.out.println("PivotTurnPID started...");
+    //System.out.println"PivotTurnPID started...");
     pivotTurnPID.setSetpoint(angle);
     pivotTurnPID.enable();
   }
 
   public void StartCameraPID() {
-    System.out.println("CameraPID started...");
+    //System.out.println"CameraPID started...");
     cameraPID.setSetpoint(0);//limelight angle);
     cameraPID.enable();
   }

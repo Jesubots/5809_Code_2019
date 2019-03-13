@@ -43,20 +43,20 @@ public class DriveMecanum extends Command {
     yInput = stick.getY();
     tInput = stick.getZ();
 
-    if(Math.abs(xInput) < .1){
+    if(Math.abs(xInput) < .15){
       xInput = 0;
     }
-    if(Math.abs(yInput) < .1){
+    if(Math.abs(yInput) < .15){
       yInput = 0;
     }
-    if(Math.abs(tInput) < .1){
+    if(Math.abs(tInput) < .15){
       tInput = 0;
     }
 
     //System.out.print("arm angle = " +  Robot.armAssembly.getArmAngle());
     //System.out.println("wrist angle = " +  Robot.armAssembly.getWristAngle());
     
-    Robot.driveTrain.mecanum.driveCartesian(-xInput * OI.getArmDir(), yInput * OI.getArmDir(), -tInput); //-Robot.driveTrain.ahrs.getYaw());
+    Robot.driveTrain.mecanum.driveCartesian(xInput * OI.getArmDir(), -yInput * OI.getArmDir(), -tInput); //-Robot.driveTrain.ahrs.getYaw());
   }
 
   // Make this return true when this Command no longer needs to run execute()

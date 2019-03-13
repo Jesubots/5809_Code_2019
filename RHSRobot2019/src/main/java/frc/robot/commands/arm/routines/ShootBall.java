@@ -31,12 +31,12 @@ public class ShootBall extends CommandGroup {
     addSequential(new Lineup(2));
     addSequential(new DrivePolarEncoders(0, 90, 2));
     //ARM POS, ADJUST DISTANCE, AND FIRE
-    if(target == BallTarget.kMID){
-      addParallel(new PositionArm(ArmPosition.kSHOOT_MID));
-    } else if(target == BallTarget.kLOW){
-      addParallel(new PositionArm(ArmPosition.kSHOOT_LOW));
-    } else if(target == BallTarget.kCARGO){
-      addParallel(new PositionArm(ArmPosition.kSHOOT_CARGO));
+    if(target == BallTarget.MID){
+      addParallel(new PositionArm(ArmPosition.SHOOT_MID));
+    } else if(target == BallTarget.LOW){
+      addParallel(new PositionArm(ArmPosition.SHOOT_LOW));
+    } else if(target == BallTarget.CARGO){
+      addParallel(new PositionArm(ArmPosition.SHOOT_CARGO));
     }
     addSequential(new Fire(true));
   }

@@ -7,44 +7,50 @@
 
 package frc.robot.commands.arm;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
 
-public class MoveTopFinger extends Command {
-  private double input;
-
-  public MoveTopFinger() {
+public class MoveWrist extends Command {
+  private double input = 0;
+  public MoveWrist() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
 
-  public MoveTopFinger(double input){
-    this.input = input * .25;
+  public MoveWrist(double input){
+    this.input = input;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    setTimeout(.5);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.armAssembly.wrist_motor.set(ControlMode.PercentOutput, input);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return input == 0;
+    return isTimedOut();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.armAssembly.wrist_motor.set(ControlMode.PercentOutput, 0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.armAssembly.wrist_motor.set(ControlMode.PercentOutput, 0);
   }
 }

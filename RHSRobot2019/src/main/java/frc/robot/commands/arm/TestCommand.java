@@ -22,12 +22,13 @@ public class TestCommand extends Command {
   @Override
   protected void initialize() {
     setTimeout(1);
+    Robot.pneumatics.brakeOn();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.climber.descend();
+    //Robot.climber.descend();
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -39,13 +40,13 @@ public class TestCommand extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.climber.stopLift();
+    //Robot.climber.stopLift();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.climber.stopLift();
-    }
+    //Robot.climber.stopLift();
+  }
 }

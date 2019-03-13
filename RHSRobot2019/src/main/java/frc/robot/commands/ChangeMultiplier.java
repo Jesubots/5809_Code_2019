@@ -5,26 +5,33 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.arm;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap.Joint;
 
-public class FlipArm extends Command {
-  public FlipArm() {
+public class ChangeMultiplier extends Command {
+  private Joint joint;
+  private double mult;
+  public ChangeMultiplier() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+  }
+
+  public ChangeMultiplier(Joint joint, double mult){
+    this.joint = joint;
+    this.mult = mult;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    setTimeout(3);
-    Robot.pneumatics.brakeOff();
-    Robot.armAssembly.StartJointPID(90 + (-OI.getArmDir() + Math.abs(90 - Robot.armAssembly.getArmAngle())), Joint.ARM);
-    OI.setArmDir(OI.getArmDir() * -1);
+    if(joint == Joint.ARM){
+      Robot.armAssembly.setArmMult(mult);
+    } else if(joint == Joint.WRIST){
+      Robot.armAssembly.setWristMult(mult);
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -35,21 +42,17 @@ public class FlipArm extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isTimedOut();
+    return true;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.pneumatics.brakeOn();
-    Robot.armAssembly.StopJointPID(Joint.ARM);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.pneumatics.brakeOn();
-    Robot.armAssembly.StopJointPID(Joint.ARM);
   }
 }

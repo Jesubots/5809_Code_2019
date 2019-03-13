@@ -13,7 +13,7 @@ public class RobotMap {
 	public static final double ENCODER_CONVERSION_CONSTANT = 2144.660585;
 	public static final double ARM_WRIST_RATIO = 1f;
 	public static final double MAXIMUM_INTAKE_ANGLE = 90f;
-	public static final double climberTimeout = 1f;
+	public static final double climberTimeout = 6.0;
 	//climber
 	public static final int leftClimber_motor_port = 1;
 	public static final int rightClimber_motor_port = 6;
@@ -36,8 +36,8 @@ public class RobotMap {
 	public static final int frontUltrasonic_port = 4;
 	public static final int backUltrasonic_port = 5;
 	//DIO
-	public static final int limitSwitch_port = 3;
-
+	public static final int armLimitSwitch_port = 2;
+	public static final int climberLimitSwitch_port = 3;
 
 	//PID values for encoders on drive train
 	public class PolarPIDMap { 
@@ -49,8 +49,8 @@ public class RobotMap {
 	}
 
 	//PID values for potentiometers on joints
-	public class PotPIDMap { 
-		public static final double kP = 0.1;
+	public class IntakePIDMap { 
+		public static final double kP = 0.01;
 		public static final double kI = 0.001;
 		public static final double kD = 1.0;
 		public static final double kF = 0.0001;
@@ -58,16 +58,32 @@ public class RobotMap {
 	}
 
 	//PID values for Encoders on joints
-	public class EncoderJointPIDMap { 
+	public class ArmPIDMap { 
 		public static final double kP = 0.01;
-		public static final double kI = 0.001;
-		public static final double kD = 0.5;
-		public static final double kF = 0.1;
+		public static final double kI = 0.0001;
+		public static final double kD = 0.001;
+		public static final double kF = 0.0;
+		public static final double kToleranceDegrees = 1.0f;
+	}
+
+	public class WristPID { 
+		public static final double kP = 0.01;
+		public static final double kI = 0.0001;
+		public static final double kD = 0.001;
+		public static final double kF = 0.0;
+		public static final double kToleranceDegrees = 1.0f;
+	}
+
+	public class FingerPIDMap { 
+		public static final double kP = 0.01;
+		public static final double kI = 0.0001;
+		public static final double kD = 0.001;
+		public static final double kF = 0.0;
 		public static final double kToleranceDegrees = 1.0f;
 	}
 
 	public class PivotTurnPIDMap {
-		public static final double kP = 0.023;
+		public static final double kP = 0.05;
 		public static final double kI = 0.0026;
 		public static final double kD = 0.25;
 		public static final double kF = 0.1;
@@ -84,8 +100,8 @@ public class RobotMap {
 
 	public class ArmAssemblyMap {
 		//Motors
-		public static final int topFinger_motor_port = 7;
-		public static final int bottomFinger_motor_port = 3;
+		public static final int backFinger_motor_port = 7;
+		public static final int frontFinger_motor_port = 3;
 		public static final int wrist_motor_port = 6;
 		public static final int armFront_motor_port = 1;
 		public static final int armBack_motor_port = 3;
@@ -95,33 +111,35 @@ public class RobotMap {
 		public static final int rightIntakeArm_motor_port = 4;
 
 		//Potentiometers
-		public static final int topFinger_pot_port = 0;
-		public static final int bottomFinger_pot_port = 1;
+		public static final int backFinger_pot_port = 0;
+		public static final int frontFinger_pot_port = 1;
 		public static final int rightIntake_pot_port = 2;
 		public static final int leftIntake_pot_port = 3;
 	}
 
 	public enum Joint {
-		kARM,
-		kINTAKE,
-		kTOP_FINGER,
-		kBOTTOM_FINGER,
-		kWRIST
+		ARM,
+		L_INTAKE,
+		R_INTAKE,
+		BACK_FINGER,
+		FRONT_FINGER,
+		WRIST
 	}
 
 	public enum ArmPosition {
-		kHATCH,
-		kBALL_PICKUP,
-		kSHOOT_LOW,
-		kSHOOT_MID,
-		kSHOOT_CARGO,
-		kDEFAULT,
-		kHOLDING
+		HATCH,
+		BALL_PICKUP,
+		SHOOT_LOW,
+		SHOOT_MID,
+		SHOOT_CARGO,
+		DEFAULT,
+		HOLDING,
+		NONE
 	}
 
 	public enum BallTarget {
-		kMID,
-		kLOW,
-		kCARGO
+		MID,
+		LOW,
+		CARGO
 	}
 }

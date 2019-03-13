@@ -16,8 +16,8 @@ public class ManualShot extends CommandGroup {
    * Add your docs here.
    */
   public ManualShot() {
-    addSequential(new JointToAngle(Joint.kBOTTOM_FINGER, 145, .5));
-    addParallel(new JointToAngle(Joint.kTOP_FINGER, 145, .5));
+    addSequential(new JointToAngle(Joint.FRONT_FINGER, 145, .5));
+    addParallel(new JointToAngle(Joint.BACK_FINGER, 145, .5));
     addSequential(new Fire(true));
   }
 }

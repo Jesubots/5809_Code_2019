@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 
@@ -17,8 +18,9 @@ import frc.robot.RobotMap;
  * Add your docs here.
  */
 public class Climber extends Subsystem {
-  VictorSPX rightClimber_motor = new VictorSPX(RobotMap.rightClimber_motor_port);
-  VictorSPX leftClimber_motor = new VictorSPX(RobotMap.leftClimber_motor_port);
+  public VictorSPX rightClimber_motor = new VictorSPX(RobotMap.rightClimber_motor_port);
+  public VictorSPX leftClimber_motor = new VictorSPX(RobotMap.leftClimber_motor_port);
+  public DigitalInput climberLimit = new DigitalInput(RobotMap.climberLimitSwitch_port);
 
   @Override
   public void initDefaultCommand() {
@@ -27,8 +29,10 @@ public class Climber extends Subsystem {
   }
 
   public void lift(){
-    rightClimber_motor.set(ControlMode.PercentOutput, -1);
-    leftClimber_motor.set(ControlMode.PercentOutput, 1);
+    if(!climberLimit.get()){
+      rightClimber_motor.set(ControlMode.PercentOutput, -1);
+      leftClimber_motor.set(ControlMode.PercentOutput, 1);
+    }
   }
 
   public void descend(){

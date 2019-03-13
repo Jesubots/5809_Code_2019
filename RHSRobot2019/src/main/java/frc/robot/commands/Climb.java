@@ -8,22 +8,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.RobotMap;
-import frc.robot.RobotMap.Joint;
 import frc.robot.commands.PID.DrivePolarEncoders;
-import frc.robot.commands.PID.JointToAngle;
 import frc.robot.commands.arm.IntakeBall;
+import frc.robot.commands.arm.RunIntakeEnds;
 
 public class Climb extends CommandGroup {
   /**
    * Add your docs here.
    */
   public Climb() {
-    addSequential(new JointToAngle(Joint.kINTAKE, 95, 2));
-    addParallel(new IntakeBall(1, 5));
-    addParallel(new DrivePolarEncoders(0, 90, 3));
+    addParallel(new RunIntakeEnds(5));
     addSequential(new Lift());
-    addParallel(new JointToAngle(Joint.kINTAKE, 0, RobotMap.climberTimeout));
+    addParallel(new DrivePolarEncoders(90, 100, 5));
     addParallel(new IntakeBall(1, 5));
   }
 }

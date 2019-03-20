@@ -14,13 +14,18 @@ import frc.robot.Robot;
 
 public class RunIntakeEnds extends Command {
   private double timeout;
+  private double rightOutput;
+  private double leftOutput;
+
   public RunIntakeEnds() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
 
-  public RunIntakeEnds(double timeout){
-    
+  public RunIntakeEnds(double timeout, double left, double right){
+    this.timeout = timeout;
+    this.leftOutput = left;
+    this.rightOutput = right;
   }
 
   // Called just before this Command runs the first time
@@ -32,8 +37,8 @@ public class RunIntakeEnds extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.armAssembly.setJointMotor(Robot.armAssembly.leftIntakeArm_motor, -1f);
-    Robot.armAssembly.setJointMotor(Robot.armAssembly.rightIntakeArm_motor, -1f);
+    Robot.armAssembly.setJointMotor(Robot.armAssembly.leftIntakeEnd_motor, leftOutput);
+    Robot.armAssembly.setJointMotor(Robot.armAssembly.rightIntakeEnd_motor, rightOutput);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -45,15 +50,15 @@ public class RunIntakeEnds extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.armAssembly.setJointMotor(Robot.armAssembly.leftIntakeArm_motor, 0);
-    Robot.armAssembly.setJointMotor(Robot.armAssembly.rightIntakeArm_motor, 0);
+    Robot.armAssembly.setJointMotor(Robot.armAssembly.leftIntakeEnd_motor, 0);
+    Robot.armAssembly.setJointMotor(Robot.armAssembly.rightIntakeEnd_motor, 0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.armAssembly.setJointMotor(Robot.armAssembly.leftIntakeArm_motor, 0);
-    Robot.armAssembly.setJointMotor(Robot.armAssembly.rightIntakeArm_motor, 0);
+    Robot.armAssembly.setJointMotor(Robot.armAssembly.leftIntakeEnd_motor, 0);
+    Robot.armAssembly.setJointMotor(Robot.armAssembly.rightIntakeEnd_motor, 0);
   }
 }

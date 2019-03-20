@@ -38,10 +38,10 @@ public class ManualBackFingerPID extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    angle = Robot.armAssembly.getJointAngle(Joint.BACK_FINGER);
+    angle = Robot.armAssembly.getBackFingerAngle();
     //System.out.println"angle front finger = " + angle);
     error = target - angle;
-    output = error * .01;
+    output = error * .005;
     if(Math.abs(output) > 1f){
       output = 1f * Math.signum(output);
     }
@@ -52,7 +52,7 @@ public class ManualBackFingerPID extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return (Math.abs(error) < 5) || isTimedOut();
+    return (Math.abs(error) < 2) || isTimedOut();
   }
 
   // Called once after isFinished returns true

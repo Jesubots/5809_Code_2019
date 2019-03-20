@@ -10,6 +10,7 @@ package frc.robot.commands.PID;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotMap.Joint;
+import frc.robot.subsystems.ArmAssembly;
 
 public class ManualArmPID extends Command {
   private double angle;
@@ -17,6 +18,8 @@ public class ManualArmPID extends Command {
   private double target;
   private double error;
   private double timeout;
+  private double kP;
+  private ArmAssembly aa = Robot.armAssembly;
   
   public ManualArmPID() {
     // Use requires() here to declare subsystem dependencies
@@ -40,11 +43,32 @@ public class ManualArmPID extends Command {
   protected void execute() {
     angle = Robot.armAssembly.getArmAngle();
     error = target - angle;
-    output = error * .01;
-    if(Math.abs(output) > 1f){
-      output = 1f * Math.signum(output);
+    if(angle < 0){
+      if(angle < target && Math.abs(angle) > 30){
+        System.out.println("KP BIG");
+        kP = .05;
+      } else {
+        System.out.println("KP SMOL");
+        kP = .004;
+      }
+    } else {
+      if(angle > target && Math.abs(angle) > 30){
+        System.out.println("KP BIG");
+        kP = .05;
+      } else {
+        System.out.println("KP SMOL");
+        kP = .004;
+      }
     }
+    output = error * kP;
+    if(Math.abs(output) > .8f){
+      output = .8f * Math.signum(output);
+    }
+    System.out.println("arm angle = " + angle);
     Robot.pneumatics.brakeOff();
+
+    
+
     Robot.armAssembly.setArmMotors(output);
   }
 
@@ -57,8 +81,10 @@ public class ManualArmPID extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    System.out.println("Finished Arm PID");
     Robot.armAssembly.setArmMotors(0);
     Robot.pneumatics.brakeOn();
+    Robot.pneumatics.disableBrake();
   }
 
   // Called when another command which requires one or more of the same
@@ -67,5 +93,6 @@ public class ManualArmPID extends Command {
   protected void interrupted() {
     Robot.armAssembly.setArmMotors(0);
     Robot.pneumatics.brakeOn();
+    Robot.pneumatics.disableBrake();
   }
 }

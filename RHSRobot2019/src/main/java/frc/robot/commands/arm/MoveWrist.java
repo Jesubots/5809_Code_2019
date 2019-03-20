@@ -26,13 +26,15 @@ public class MoveWrist extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    System.out.println("Move wrist at " + input);
     setTimeout(.5);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.armAssembly.wrist_motor.set(ControlMode.PercentOutput, input);
+    System.out.println("Move wrist at " + input);
+    Robot.armAssembly.setWristMotor(input);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -44,13 +46,13 @@ public class MoveWrist extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.armAssembly.wrist_motor.set(ControlMode.PercentOutput, 0);
+    Robot.armAssembly.setWristMotor(0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.armAssembly.wrist_motor.set(ControlMode.PercentOutput, 0);
+    Robot.armAssembly.setWristMotor(0);
   }
 }

@@ -8,21 +8,22 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.Joint;
 import frc.robot.commands.DriveMecanum;
 import frc.robot.commands.Auto.DriveOffHab;
 import frc.robot.commands.PID.ManualArmPID;
+import frc.robot.commands.PID.ManualBackFingerPID;
+import frc.robot.commands.PID.ManualFrontFingerPID;
+import frc.robot.commands.PID.ManualLeftIntakePID;
+import frc.robot.commands.PID.ManualRightIntakePID;
 import frc.robot.commands.PID.ManualWristPID;
 import frc.robot.commands.arm.TestCommand;
-import frc.robot.commands.arm.routines.PositionArm;
 import frc.robot.subsystems.ArmAssembly;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
@@ -62,7 +63,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Test mode", testChooser);
     testChooser.setDefaultOption("None", new TestCommand());
 
-    CameraServer.getInstance().startAutomaticCapture();
+    //CameraServer.getInstance().startAutomaticCapture();
 
 
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("stream").setDouble(1);
@@ -74,15 +75,22 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     
     m_chooser.addOption("Arm Angle", new ManualArmPID(SmartDashboard.getNumber("Angle", 90), 2));
-    m_chooser.addOption("Hatch Position", new ManualWristPID(SmartDashboard.getNumber("Angle", 90), 2));
-    m_chooser.addOption("Default Position", new PositionArm(ArmPosition.DEFAULT));
-    m_chooser.addOption("Holding Position", new PositionArm(ArmPosition.HOLDING));
+    m_chooser.addOption("Wrist Angle", new ManualWristPID(SmartDashboard.getNumber("Angle", 90), 2));
+    m_chooser.addOption("Back Finger Angle", new ManualBackFingerPID(SmartDashboard.getNumber("Angle", 90), 2));
+    m_chooser.addOption("Front Finger Angle", new ManualFrontFingerPID(SmartDashboard.getNumber("Angle", 90), 2));
+    m_chooser.addOption("Right Intake Angle", new ManualRightIntakePID(SmartDashboard.getNumber("Angle", 90), 2));
+    m_chooser.addOption("Left Intake Angle", new ManualLeftIntakePID(SmartDashboard.getNumber("Angle", 90), 2));
 
-    SmartDashboard.putNumber("BackFinger Angle", Robot.armAssembly.getJointAngle(Joint.BACK_FINGER));
-    SmartDashboard.putNumber("FrontFinger Angle", Robot.armAssembly.getJointAngle(Joint.FRONT_FINGER));
+    SmartDashboard.putNumber("Arm Angle", Robot.armAssembly.getArmAngle());
+    SmartDashboard.putNumber("Wrist Angle", Robot.armAssembly.getWristAngle());
+
+    SmartDashboard.putNumber("Right Intake Angle", Robot.armAssembly.getJointAngle(Joint.R_INTAKE));
+    SmartDashboard.putNumber("Left Intake Angle", Robot.armAssembly.getJointAngle(Joint.L_INTAKE));
+
+    SmartDashboard.putNumber("Front Finger Angle", Robot.armAssembly.getJointAngle(Joint.FRONT_FINGER));
+    SmartDashboard.putNumber("Back Finger Angle", Robot.armAssembly.getBackFingerAngle());
+
     SmartDashboard.putData("Arm PID", Robot.armAssembly.armPID.getPIDController());
-
-
   }
 
   //runs when robot is disabled
@@ -99,13 +107,14 @@ public class Robot extends TimedRobot {
   //runs when auto starts, not sure if needed because sandstorm
   @Override
   public void autonomousInit() {
-    Robot.armAssembly.setArmEncoder(90);
-    Robot.armAssembly.setWristEncoder(90);
+    Robot.armAssembly.armInit();
+    Robot.armAssembly.setArmEncoder(0);
+    Robot.armAssembly.setWristEncoder(0);
     m_autonomousCommand = m_chooser.getSelected();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
+     * "Default"); switch(autoSelec ted) { case "My Auto": autonomousCommand
      * = new MyAutoCommand(); break; case "Default Auto": default:
      * autonomousCommand = new ExampleCommand(); break; }
      */
@@ -127,9 +136,10 @@ public class Robot extends TimedRobot {
   //runs when teleop initializes
   @Override
   public void teleopInit() {
-    //stop auto
-    Robot.armAssembly.setArmEncoder(90);
-    Robot.armAssembly.setWristEncoder(90);
+    Robot.pneumatics.brakeOn();
+    Robot.pneumatics.disableBrake();
+    Robot.armAssembly.setArmEncoder(0);
+    Robot.armAssembly.setWristEncoder(0);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

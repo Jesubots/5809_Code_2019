@@ -45,6 +45,7 @@ public class ManualWristPID extends Command {
       output = 1f * Math.signum(output);
     }
     output *= .75;
+    System.out.println("wrist at " + -output);
     Robot.armAssembly.setWristMotor(-output);
   }
 

@@ -31,19 +31,14 @@ public class Fire extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    if(!projectile){
-      Robot.pneumatics.punchOn();
-      Timer.delay(.05);
-      Robot.pneumatics.punchOff();
-      Timer.delay(.075);
-      Robot.pneumatics.punchOn();
-      Timer.delay(1);
-      Robot.pneumatics.punchOff();
-    } else {
-      Robot.pneumatics.punchOn();
-      Timer.delay(1);
-      Robot.pneumatics.punchOff();
-    }
+    Robot.armAssembly.setBackFingerMotor(-.25);
+    Robot.armAssembly.setFrontFingerMotor(-.25);
+    Timer.delay(.05);
+    Robot.armAssembly.setBackFingerMotor(0);
+    Robot.armAssembly.setFrontFingerMotor(0);
+    Robot.pneumatics.punchOn();
+    Timer.delay(1);
+    Robot.pneumatics.punchOff();
   }
 
   // Called repeatedly when this Command is scheduled to run

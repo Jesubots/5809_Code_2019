@@ -12,6 +12,8 @@ import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.Joint;
+import frc.robot.commands.PID.ConstantLeftIntakePID;
+import frc.robot.commands.PID.ConstantRightIntakePID;
 import frc.robot.commands.PID.JointToAngle;
 import frc.robot.commands.PID.ManualArmPID;
 import frc.robot.commands.PID.ManualBackFingerPID;
@@ -26,6 +28,7 @@ public class PositionArm extends CommandGroup {
   private double rightIntakeAngle = Robot.armAssembly.getJointAngle(Joint.R_INTAKE);
   private double leftIntakeAngle = Robot.armAssembly.getJointAngle(Joint.L_INTAKE);
   private int dir = 1;
+  private double timeout = 2;
   public PositionArm() {
     
   }
@@ -41,65 +44,68 @@ public class PositionArm extends CommandGroup {
     dir = OI.getArmDir();
     //if we want to pickup/drop hatches
     if(position == ArmPosition.HATCH){
-      armAngle = 90 - (45 * dir);
-      wristAngle = armAngle;
-      backFingerAngle = 90;
-      frontFingerAngle = 90;
-      leftIntakeAngle = 90;
-      rightIntakeAngle = 90;
+      armAngle = -30 * dir;
+      wristAngle = -60 * dir;
+      backFingerAngle = 0;
+      frontFingerAngle = 0;
+      leftIntakeAngle = 5;
+      rightIntakeAngle = 5;
     } //if we want to pickup balls from the ground with the intake
     else if(position == ArmPosition.BALL_PICKUP){
-      armAngle = 90 - (66 * dir);
-      wristAngle = 180 + (86 * dir);
+      armAngle = -75 * dir;
+      wristAngle = -80 * dir;
       backFingerAngle = 45;
       frontFingerAngle = 45;
-      leftIntakeAngle = 90;
-      rightIntakeAngle = 90;
+      leftIntakeAngle = 52;
+      rightIntakeAngle = 55;
+      timeout = 8;
     } //if we want to aim for the low rocket goal
     else if(position == ArmPosition.SHOOT_LOW){
-      armAngle = 90 + (30 * dir);
-      wristAngle = 180 + (15 * dir);
+      armAngle = -30 * dir;
+      wristAngle = -30 * dir;
       backFingerAngle = 20;
       frontFingerAngle = 20;
-      leftIntakeAngle = 90;
-      rightIntakeAngle = 90;
+      leftIntakeAngle = 5;
+      rightIntakeAngle = 5;
     } //if we want to aim for the second level rocket goal
     else if(position == ArmPosition.SHOOT_MID){
-      armAngle = 90 + (30 * dir);
-      wristAngle = 180 + (15 * dir);
+      armAngle = -30 * dir;
+      wristAngle = -30 * dir;
       backFingerAngle = 20;
       frontFingerAngle = 20;
-      leftIntakeAngle = 90;
-      rightIntakeAngle = 90;
+      leftIntakeAngle = 5;
+      rightIntakeAngle = 5;
     } //if we want to aim for the cargo ship goal
     else if(position == ArmPosition.SHOOT_CARGO){
-      armAngle = 90 - (66 * dir);
-      wristAngle = 180 + (86 * dir);
+      armAngle = -15 * dir;
+      wristAngle = 40 * dir;
       backFingerAngle = 20;
       frontFingerAngle = 20;
-      leftIntakeAngle = 90;
-      rightIntakeAngle = 90;
+      leftIntakeAngle = 5;
+      rightIntakeAngle = 5;
     } //position we use at the start of the game
     else if(position == ArmPosition.DEFAULT){
-      armAngle = 5;
+      armAngle = 0;
       wristAngle = 0;
       backFingerAngle = 20;
       frontFingerAngle = 20;
-      leftIntakeAngle = 90;
-      rightIntakeAngle = 90;
+      leftIntakeAngle = 5;
+      rightIntakeAngle = 5;
     }
     else if(position == ArmPosition.HOLDING){
-      armAngle = 90 - (10 * dir);
-      wristAngle = 90 - (10 * dir);
-      leftIntakeAngle = 90;
-      rightIntakeAngle = 90;
+      armAngle = 10 * dir;
+      wristAngle = 10 * dir;
+      backFingerAngle = 110;
+      frontFingerAngle = 110;
+      leftIntakeAngle = 0;
+      rightIntakeAngle = 0;
     }
-      addParallel(new ManualArmPID(armAngle, 2));
-      addParallel(new ManualWristPID(wristAngle, 2));
-      //addParallel(new ManualBackFingerPID(backFingerAngle, 2));
-      //addParallel(new ManualFrontFingerPID(frontFingerAngle, 2));
-      //addParallel(new JointToAngle(Joint.R_INTAKE, rightIntakeAngle, 2));
-      //addParallel(new JointToAngle(Joint.L_INTAKE, leftIntakeAngle, 2));
+      addParallel(new ConstantLeftIntakePID(leftIntakeAngle, timeout));
+      addParallel(new ConstantRightIntakePID(-rightIntakeAngle, timeout));
+      addParallel(new ManualBackFingerPID(backFingerAngle, 2));
+      addParallel(new ManualFrontFingerPID(frontFingerAngle, 2));
+      addSequential(new ManualArmPID(armAngle, 2));
+      addSequential(new ManualWristPID(wristAngle, 2));
       Robot.armAssembly.setArmPosition(position);
   }
 }

@@ -31,13 +31,12 @@ public class RobotMap {
 	public static final int frontRight_port = 2;
 	//AN
 	public static final int rightPistonMag_port = 0;
-	public static final int leftPistonMag_port = 1;
+	//public static final int leftPistonMag_port = 1;
 	//navx runs AN ports 4-7, referred to as 0-3
 	public static final int frontUltrasonic_port = 4;
 	public static final int backUltrasonic_port = 5;
 	//DIO
-	public static final int armLimitSwitch_port = 2;
-	public static final int climberLimitSwitch_port = 3;
+	public static final int climberLimitSwitch_port = 1;
 
 	//PID values for encoders on drive train
 	public class PolarPIDMap { 

@@ -15,8 +15,6 @@ import frc.robot.RobotMap.ArmPosition;
 import frc.robot.RobotMap.Joint;
 
 public class WristToAngle extends Command {
-  //joint is an enum value that tells the PID which motor and pot to use
-  private Joint joint;
   private double angle;
   private double timeout;
 

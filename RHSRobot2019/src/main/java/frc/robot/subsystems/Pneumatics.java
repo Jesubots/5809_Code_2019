@@ -7,11 +7,11 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Add your docs here.
@@ -25,7 +25,7 @@ public class Pneumatics extends Subsystem {
   Solenoid brakeReverse_sol = new Solenoid(RobotMap.brakeReverse_sol_port);
 
   public DigitalInput rightPistonMag = new DigitalInput(RobotMap.rightPistonMag_port);
-  public DigitalInput leftPistonMag = new DigitalInput(RobotMap.leftPistonMag_port);
+  //public DigitalInput leftPistonMag = new DigitalInput(RobotMap.leftPistonMag_port);
 
   public void punchOn(){
     leftPunchForward_sol.set(true);
@@ -39,6 +39,9 @@ public class Pneumatics extends Subsystem {
     rightPunchForward_sol.set(false);
     leftPunchReverse_sol.set(true);
     rightPunchReverse_sol.set(true);
+    Timer.delay(.1);
+    leftPunchReverse_sol.set(false);
+    rightPunchReverse_sol.set(false);
   }
 
   public void disengagePistons(){
@@ -51,11 +54,18 @@ public class Pneumatics extends Subsystem {
   public void brakeOn(){
     brakeForward_sol.set(true);
     brakeReverse_sol.set(false);
+    Timer.delay(.1);
+    brakeForward_sol.set(false);
   }
 
   public void brakeOff(){
     brakeForward_sol.set(false);
     brakeReverse_sol.set(true);
+  }
+
+  public void disableBrake(){
+    brakeForward_sol.set(false);
+    brakeReverse_sol.set(false);
   }
 
   @Override

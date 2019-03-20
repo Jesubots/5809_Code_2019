@@ -55,7 +55,6 @@ public class ArmAssembly extends Subsystem {
   public static ArmPID armPID = new ArmPID();
   public static WristPID wristPID = new WristPID();
 
-  public DigitalInput limitSwitch = new DigitalInput(RobotMap.armLimitSwitch_port);
 
   public double wristMult = .5;
   public double armMult = .5;
@@ -63,6 +62,8 @@ public class ArmAssembly extends Subsystem {
 
   private double backFingerOffset;
   private double frontFingerOffset;
+  private double leftIntakeOffset;
+  private double rightIntakeOffset;
 
   public void setArmMult(double mult){
     armMult -= mult;
@@ -85,12 +86,14 @@ public class ArmAssembly extends Subsystem {
   }
   
   public ArmAssembly(){
-    armInit();
+    
   }
 
   public void armInit(){
     backFingerOffset = backFinger_pot.get();
     frontFingerOffset = frontFinger_pot.get();
+    leftIntakeOffset = leftIntake_pot.get();
+    rightIntakeOffset = rightIntake_pot.get();
   }
 
   @Override
@@ -154,6 +157,15 @@ public class ArmAssembly extends Subsystem {
         frontFingerPID.enable();
       }
     }
+  }
+
+  public void stopAll(){
+    setWristMotor(0);
+    setArmMotors(0);
+    setLeftIntakeMotor(0);
+    setRightIntakeMotor(0);
+    setBackFingerMotor(0);
+    setFrontFingerMotor(0);
   }
 
   public void StopArmPID(){
@@ -226,32 +238,31 @@ public class ArmAssembly extends Subsystem {
   }
 
   public void setWristMotor(double output){
-    wrist_motor.configPeakOutputForward(.75);
-    wrist_motor.configPeakOutputReverse(.75);
+    System.out.println("Move wrist at " + output);
     wrist_motor.set(ControlMode.PercentOutput, output);
   }
 
   public void setBackFingerMotor(double output){
     backFinger_motor.configPeakOutputForward(.75);
-    backFinger_motor.configPeakOutputReverse(.75);
+    backFinger_motor.configPeakOutputReverse(-.75);
     backFinger_motor.set(ControlMode.PercentOutput, output);
   }
 
   public void setFrontFingerMotor(double output){
     frontFinger_motor.configPeakOutputForward(.75);
-    frontFinger_motor.configPeakOutputReverse(.75);
+    frontFinger_motor.configPeakOutputReverse(-.75);
     frontFinger_motor.set(ControlMode.PercentOutput, output);
   }
 
   public void setRightIntakeMotor(double output){
     rightIntakeArm_motor.configPeakOutputForward(.75);
-    rightIntakeArm_motor.configPeakOutputReverse(.75);
+    rightIntakeArm_motor.configPeakOutputReverse(-.75);
     rightIntakeArm_motor.set(ControlMode.PercentOutput, output);
   }
 
   public void setLeftIntakeMotor(double output){
     leftIntakeArm_motor.configPeakOutputForward(.75);
-    leftIntakeArm_motor.configPeakOutputReverse(.75);
+    leftIntakeArm_motor.configPeakOutputReverse(-.75);
     leftIntakeArm_motor.set(ControlMode.PercentOutput, output);
   }
 
@@ -262,10 +273,6 @@ public class ArmAssembly extends Subsystem {
     armFront_motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     encRaw = armFront_motor.getSelectedSensorPosition();
     angle = ((double)encRaw)*(360f/4096f);
-
-    if(angle < 0){
-      angle = 0;
-    }
 
     return angle;
   }
@@ -278,10 +285,6 @@ public class ArmAssembly extends Subsystem {
     encRaw = (double)wrist_motor.getSelectedSensorPosition();
     angle = (encRaw)*(18f/40f)*(360f/4096f);
 
-    if(angle < 0){
-      angle = 0;
-    }
-
     return angle;
   }
 
@@ -292,6 +295,10 @@ public class ArmAssembly extends Subsystem {
     armFront_motor.setSelectedSensorPosition(0);
 
   }
+
+  public double getBackFingerAngle(){
+    return backFinger_pot.get() - backFingerOffset;
+  }
   
   public double getJointAngle(Joint joint){
     switch (joint){
@@ -299,9 +306,9 @@ public class ArmAssembly extends Subsystem {
 
       case WRIST: return getWristAngle();
 
-      case L_INTAKE: leftIntake_pot.get();
+      case L_INTAKE: return leftIntake_pot.get() - leftIntakeOffset;
 
-      case R_INTAKE: rightIntake_pot.get();
+      case R_INTAKE: return rightIntake_pot.get() - rightIntakeOffset;
 
       case BACK_FINGER: return backFinger_pot.get() - backFingerOffset;
 

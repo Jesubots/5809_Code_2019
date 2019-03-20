@@ -10,19 +10,19 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap.ArmPosition;
-import frc.robot.RobotMap.Joint;
-import frc.robot.commands.ChangeMultiplier;
 import frc.robot.commands.Climb;
-import frc.robot.commands.PID.JointToAngle;
+import frc.robot.commands.PID.ConstantLeftIntakePID;
+import frc.robot.commands.PID.ConstantRightIntakePID;
+import frc.robot.commands.PID.ManualArmPID;
+import frc.robot.commands.PID.ManualLeftIntakePID;
+import frc.robot.commands.PID.ManualRightIntakePID;
 import frc.robot.commands.arm.Fire;
-import frc.robot.commands.arm.FlipArm;
 import frc.robot.commands.arm.MoveArm;
 import frc.robot.commands.arm.MoveFingers;
 import frc.robot.commands.arm.MoveIntakes;
 import frc.robot.commands.arm.MoveWrist;
-import frc.robot.commands.arm.TestCommand;
+import frc.robot.commands.arm.RunIntakeEnds;
 import frc.robot.commands.arm.routines.PickupBallGround;
-import frc.robot.commands.arm.routines.PlaceHatch;
 import frc.robot.commands.arm.routines.PositionArm;
 
 //controls class
@@ -77,47 +77,51 @@ public class OI {
 
     OI.hatchWallPickup_b.whenPressed(new PositionArm(ArmPosition.HATCH));
 
-    OI.flipArm_b.whenPressed(new FlipArm());
+    OI.flipArm_b.whenPressed(new ManualArmPID(-Robot.armAssembly.getArmAngle(), 2));
 
     OI.manualShoot_b.whenPressed(new Fire(true));
 
-    if(Robot.armAssembly.getArmPosition() == ArmPosition.BALL_PICKUP)
+    //if(Robot.armAssembly.getArmPosition() == ArmPosition.BALL_PICKUP)
       OI.ballGroundPickup_b.whenPressed(new PickupBallGround());
-    else 
-      OI.ballGroundPickup_b.whenPressed(new PositionArm(ArmPosition.BALL_PICKUP));
+    //else 
+      //OI.ballGroundPickup_b.whenPressed(new PositionArm(ArmPosition.BALL_PICKUP));
 
-    OI.intakePosition_b.whenPressed(new JointToAngle(Joint.L_INTAKE, 90, 2));
-    OI.intakePosition_b.whenPressed(new JointToAngle(Joint.R_INTAKE, 90, 2));
+    OI.intakePosition_b.whenPressed(new ManualRightIntakePID(0, 2));
+    OI.intakePosition_b.whenPressed(new ManualLeftIntakePID(0, 2));
 
-    if(Robot.armAssembly.getArmPosition() == ArmPosition.HATCH)
-      OI.hatchPlace_b.whenPressed(new PlaceHatch()); 
+    OI.hatchPlace_b.whenPressed(new PositionArm(ArmPosition.HOLDING));
+
+    //if(Robot.armAssembly.getArmPosition() == ArmPosition.HATCH)
+      //OI.hatchPlace_b.whenPressed(new PlaceHatch()); 
     //else
       //OI.hatchPlace_b.whenPressed(new PositionArm(ArmPosition.HATCH));
 
     //OI.shootRocketLow_b.whenPressed(new ShootBall(BallTarget.LOW));
     //OI.aimRocketLow_b.whenPressed(new PositionArm(ArmPosition.SHOOT_LOW)); 
-    OI.aimRocketMid_b.whenPressed(new ChangeMultiplier(Joint.WRIST, .1));
-    OI.aimRocketLow_b.whenPressed(new ChangeMultiplier(Joint.ARM, .25));
+    OI.aimRocketMid_b.whenPressed(new PickupBallGround());
+    OI.aimRocketLow_b.whenPressed(new PositionArm(ArmPosition.SHOOT_LOW));
 
     OI.shootRocketLow_b.whileHeld(new MoveFingers(1));
-    OI.shootRocketMid_b.whileHeld(new MoveFingers(-1));
+    OI.shootRocketMid_b.whenPressed(new PositionArm(ArmPosition.BALL_PICKUP));
 
     //OI.shootRocketMid_b.whenPressed(new ShootBall(BallTarget.MID)); 
     //OI.aimRocketMid_b.whenPressed(new PositionArm(ArmPosition.SHOOT_MID)); 
     OI.left_stick.whileHeld(new MoveWrist(-.2));
     OI.right_stick.whileHeld(new MoveWrist(.2));
 
-    OI.aimCargo_b.whileHeld(new MoveIntakes(.5));
-    OI.shootCargo_b.whileHeld(new MoveIntakes(-.5));
+    OI.aimCargo_b.whenPressed(new PositionArm(ArmPosition.SHOOT_CARGO));
+    OI.shootCargo_b.whileHeld(new MoveIntakes(-1));
+    OI.shootCargo_b.whileHeld(new RunIntakeEnds(1, -.75, .75));
     //OI.shootCargo_b.whenPressed(new ShootBall(BallTarget.CARGO)); 
     //OI.aimCargo_b.whenPressed(new PositionArm(ArmPosition.SHOOT_CARGO)); 
 
     OI.climb_b.whenPressed(new Climb());
 
-    OI.armDown_b.whileHeld(new MoveArm(-.6)); 
-    OI.armUp_b.whileHeld(new MoveArm(.6));
+    OI.armDown_b.whileHeld(new MoveArm(-.25)); 
+    OI.armUp_b.whileHeld(new MoveArm(.25));
 
-    OI.test_b.whenPressed(new TestCommand());
+    OI.test_b.whenPressed(new ConstantRightIntakePID(45f, 10f));
+    OI.test_b.whenPressed(new ConstantLeftIntakePID(45f, 10f));
   }
 
   public static int getArmDir(){

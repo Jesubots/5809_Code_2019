@@ -11,19 +11,19 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotMap.Joint;
 
-public class ManualFrontFingerPID extends Command {
+public class ManualRightIntakePID extends Command {
   private double angle;
   private double output;
   private double target;
   private double error;
   private double timeout;
   
-  public ManualFrontFingerPID() {
+  public ManualRightIntakePID() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
 
-  public ManualFrontFingerPID(double target, double timeout){
+  public ManualRightIntakePID(double target, double timeout){
     this.target = target;
     this.timeout = timeout;
   }
@@ -38,15 +38,15 @@ public class ManualFrontFingerPID extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    angle = Robot.armAssembly.getJointAngle(Joint.FRONT_FINGER);
-    //System.out.println"angle back finger = " + angle);
+    angle = Robot.armAssembly.getJointAngle(Joint.R_INTAKE);
+    //System.out.println"angle front finger = " + angle);
     error = target - angle;
-    output = error * .005;
+    output = error * .001;
     if(Math.abs(output) > 1f){
       output = 1f * Math.signum(output);
     }
     //System.out.println"output = " + output);
-    Robot.armAssembly.setFrontFingerMotor(-output);
+    Robot.armAssembly.setRightIntakeMotor(-output);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -59,7 +59,7 @@ public class ManualFrontFingerPID extends Command {
   @Override
   protected void end() {
     //System.out.println"PID Ended");
-    Robot.armAssembly.setFrontFingerMotor(0);
+    Robot.armAssembly.setRightIntakeMotor(0);
   }
 
   // Called when another command which requires one or more of the same
@@ -67,6 +67,6 @@ public class ManualFrontFingerPID extends Command {
   @Override
   protected void interrupted() {
     //System.out.println"PID Interrupted");
-    Robot.armAssembly.setFrontFingerMotor(0);
+    Robot.armAssembly.setRightIntakeMotor(0);
   }
 }

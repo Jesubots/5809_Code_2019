@@ -17,7 +17,7 @@ public class Climb extends CommandGroup {
    * Add your docs here.
    */
   public Climb() {
-    addParallel(new RunIntakeEnds(5));
+    addParallel(new RunIntakeEnds(5, -.4, -.4));
     addSequential(new Lift());
     addParallel(new DrivePolarEncoders(90, 100, 5));
     addParallel(new IntakeBall(1, 5));

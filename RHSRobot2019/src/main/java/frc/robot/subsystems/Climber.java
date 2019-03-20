@@ -20,7 +20,7 @@ import frc.robot.RobotMap;
 public class Climber extends Subsystem {
   public VictorSPX rightClimber_motor = new VictorSPX(RobotMap.rightClimber_motor_port);
   public VictorSPX leftClimber_motor = new VictorSPX(RobotMap.leftClimber_motor_port);
-  public DigitalInput climberLimit = new DigitalInput(RobotMap.climberLimitSwitch_port);
+  public DigitalInput leftClimberLimit = new DigitalInput(RobotMap.climberLimitSwitch_port);
 
   @Override
   public void initDefaultCommand() {
@@ -29,10 +29,10 @@ public class Climber extends Subsystem {
   }
 
   public void lift(){
-    if(!climberLimit.get()){
+    //if(!climberLimit.get()){
       rightClimber_motor.set(ControlMode.PercentOutput, -1);
       leftClimber_motor.set(ControlMode.PercentOutput, 1);
-    }
+    //}
   }
 
   public void descend(){
